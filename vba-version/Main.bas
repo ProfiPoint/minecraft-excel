@@ -122,7 +122,28 @@ Sub Move()
     ds.Range("B18").Value = statsCells
     ds.Range("B19").Value = statsRowsDrawn
     ds.Range("E19").value = "running"
+
+    Sheets("Data").Range("D21:E70").Copy Destination:=Sheets("Data").Range("D22:E71")
+    
+    ' Take the number from "Data" sheet, cell E18 and copy to E21
+    Sheets("Data").Range("E21").Value = Sheets("Data").Range("E18").Value
 End Sub
+
+Sub SetRandomNumbersB()
+    ' Set cell B9 to a random number between 0 and 359
+    Range("B9").Value = Int((360 * Rnd))
+    
+    ' Set cell B10 to a random number between -90 and 90
+    Range("B10").Value = Int((180 * Rnd) - 90)
+End Sub
+
+Sub SetRandomNumbersA()
+    ' Set cell B4, B5, B6 to random numbers between -400 and 400
+    Range("B4").Value = Int((800 * Rnd) - 400)
+    Range("B5").Value = Int((800 * Rnd) - 400)
+    Range("B6").Value = Int((800 * Rnd) - 400)
+End Sub
+
 
 ' [Creates 6 Sides of a Block when creating a new Block]
 Function InitBlock(middle As Variant, texture As String) As Block
@@ -304,7 +325,6 @@ End Function
 
 ' [Projects 3D points to 2D points and draws them]
 Function ConvertDraw2D(allSquares As Collection) As Collection
-    'Set allSquares = ReverseCollection(allSquares)
     Dim currentSquare As Pixel
     Dim pixelsByY As Object
     Dim squareVertices2d As New Collection

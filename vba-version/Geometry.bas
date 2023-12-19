@@ -116,8 +116,8 @@ Sub GetLinePixels(startPt As Variant, endPt As Variant, pixelsByY As Object)
     Do While x0 <> x1 Or y0 <> y1
         If Not pixelsByY.Exists(y0) Then
             Set pixelsByY(y0) = CreateObject("Scripting.Dictionary")
-            pixelsByY(y0).Add "Min", 2147483647        ' Initialize with minimum possible value
-            pixelsByY(y0).Add "Max", -2147483647        ' Initialize with maximum possible value
+            pixelsByY(y0).Add "Min", 2147483647 ' Initialize with minimum possible value
+            pixelsByY(y0).Add "Max", -2147483647 ' Initialize with maximum possible value
         End If
         If y0 > 0 Then
             If x0 < pixelsByY(y0)("Min") Then
