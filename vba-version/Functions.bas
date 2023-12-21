@@ -1,4 +1,5 @@
 Attribute VB_Name = "Functions"
+Option Explicit
 
 Function ConvertToString(t1 As Variant) As String
     ConvertToString = CStr(t1(0)) & "," & CStr(t1(1)) & "," & CStr(t1(2))

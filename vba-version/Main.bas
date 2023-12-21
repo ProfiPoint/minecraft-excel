@@ -3,30 +3,15 @@ Public blocks As Collection
 
 ' [Public variables - Classes]
 Public P As New Player
+Public G As New Game
 Public C As New Calculations
-Public Textures As New BlockTextures
+Public T As New Textures
+Public Stats As New Stats
 
 ' [Public variables - Sheets]
 Public ms As Worksheet ' Minecraft
 Public ts As Worksheet ' Textures
 Public ds As Worksheet ' Data
-
-' [Public variables - Settings]
-Public screenWidth As Long
-Public screenHeight As Long
-Public blockSize As Long
-Public blockSizeHalf As Double
-Public moveBy As Long
-Public rotateBy As Long
-Public instantDrawing As Boolean
-Public valuesSet As Boolean
-
-' [Public variables - Stats]
-Public statsBlocks As Long
-Public statsVisiblePixels As Long
-Public statsVisibleSides As Long
-Public statsCells As Long
-Public statsRowsDrawn As Long
 
 ' [Initailize the game]
 Sub Init()
@@ -47,21 +32,21 @@ Sub Init()
     P.pitch = CInt(ds.Range("B10").Value)
     
     ' Loads block textures
-    Textures.LoadInput "grass", ts.Range("K10:R17")
-    Textures.LoadInput "dirt", ts.Range("AA10:AH35")
-    Textures.LoadInput "stone", ts.Range("AQ10:AX35")
-    Textures.LoadInput "wood", ts.Range("BG10:BN35")
-    Textures.LoadInput "bedrock", ts.Range("BW10:CD35")
-    Textures.LoadInput "cobblestone", ts.Range("CM10:CT35")
-    Textures.LoadInput "diamond", ts.Range("DC10:DJ35")
-    Textures.LoadInput "gold", ts.Range("DS10:DZ35")
-    Textures.LoadInput "ice", ts.Range("EI10:EP35")
-    Textures.LoadInput "sand", ts.Range("EY10:FF35")
-    Textures.LoadInput "tnt", ts.Range("FO10:FV35")
-    Textures.LoadInput "brick", ts.Range("GE10:GL35")
-    Textures.LoadInput "crafting", ts.Range("GU10:HB35")
-    Textures.LoadInput "leaves", ts.Range("HK10:HR35")
-    Textures.LoadInput "rainbow", ts.Range("IA10:IH35")
+    T.LoadInput "grass", ts.Range("K10:R17")
+    T.LoadInput "dirt", ts.Range("AA10:AH35")
+    T.LoadInput "stone", ts.Range("AQ10:AX35")
+    T.LoadInput "wood", ts.Range("BG10:BN35")
+    T.LoadInput "bedrock", ts.Range("BW10:CD35")
+    T.LoadInput "cobblestone", ts.Range("CM10:CT35")
+    T.LoadInput "diamond", ts.Range("DC10:DJ35")
+    T.LoadInput "gold", ts.Range("DS10:DZ35")
+    T.LoadInput "ice", ts.Range("EI10:EP35")
+    T.LoadInput "sand", ts.Range("EY10:FF35")
+    T.LoadInput "tnt", ts.Range("FO10:FV35")
+    T.LoadInput "brick", ts.Range("GE10:GL35")
+    T.LoadInput "crafting", ts.Range("GU10:HB35")
+    T.LoadInput "leaves", ts.Range("HK10:HR35")
+    T.LoadInput "rainbow", ts.Range("IA10:IH35")
     
     ds.Range("E19").value = "running" ' (stats) status log
     
@@ -87,16 +72,16 @@ End Sub
 ' [Calculates the current frame]
 Sub Move()
     ' Resets stats values
-    statsBlocks = 0
-    statsVisibleSides = 0
-    statsVisiblePixels = 0
-    statsCells = 0
-    statsRowsDrawn = 0
+    Stats.Blocks = 0
+    Stats.VisibleSides = 0
+    Stats.VisiblePixels = 0
+    Stats.Cells = 0
+    Stats.RowsDrawn = 0
     
     ds.Range("E19").value = "calculating..." ' (stats) status log
     Call InsertCurrentTime("Data!E14") ' (stats) time log
     
-    If instantDrawing = TRUE Then
+    If G.instantDrawing = TRUE Then
         Application.ScreenUpdating = FALSE
     End If
     
@@ -108,7 +93,7 @@ Sub Move()
     Set pixels = ApplyTexture(pixels)
     Set pixels = ConvertDraw2D(pixels)
 
-    If instantDrawing = TRUE Then
+    If G.instantDrawing = TRUE Then
         Application.ScreenUpdating = TRUE
     End If
     
@@ -116,34 +101,13 @@ Sub Move()
     Call InsertCurrentTime("Data!E17") ' (stats) time log
     Call WritePlayer
     
-    ds.Range("B13").Value = statsBlocks
-    ds.Range("B16").Value = statsVisibleSides
-    ds.Range("B17").Value = statsVisiblePixels
-    ds.Range("B18").Value = statsCells
-    ds.Range("B19").Value = statsRowsDrawn
+    ds.Range("B13").Value = Stats.Blocks
+    ds.Range("B16").Value = Stats.VisibleSides
+    ds.Range("B17").Value = Stats.VisiblePixels
+    ds.Range("B18").Value = Stats.Cells
+    ds.Range("B19").Value = Stats.RowsDrawn
     ds.Range("E19").value = "running"
-
-    Sheets("Data").Range("D21:E70").Copy Destination:=Sheets("Data").Range("D22:E71")
-    
-    ' Take the number from "Data" sheet, cell E18 and copy to E21
-    Sheets("Data").Range("E21").Value = Sheets("Data").Range("E18").Value
 End Sub
-
-Sub SetRandomNumbersB()
-    ' Set cell B9 to a random number between 0 and 359
-    Range("B9").Value = Int((360 * Rnd))
-    
-    ' Set cell B10 to a random number between -90 and 90
-    Range("B10").Value = Int((180 * Rnd) - 90)
-End Sub
-
-Sub SetRandomNumbersA()
-    ' Set cell B4, B5, B6 to random numbers between -400 and 400
-    Range("B4").Value = Int((800 * Rnd) - 400)
-    Range("B5").Value = Int((800 * Rnd) - 400)
-    Range("B6").Value = Int((800 * Rnd) - 400)
-End Sub
-
 
 ' [Creates 6 Sides of a Block when creating a new Block]
 Function InitBlock(middle As Variant, texture As String) As Block
@@ -164,12 +128,12 @@ Function InitBlock(middle As Variant, texture As String) As Block
     Dim side6 As Side
     Set side6 = New Side
     
-    side1.Initialize SumTuple(middle, Array(blockSizeHalf, 0, 0)), "right", texture
-    side2.Initialize SumTuple(middle, Array(-blockSizeHalf, 0, 0)), "left", texture
-    side3.Initialize SumTuple(middle, Array(0, 0, blockSizeHalf)), "back", texture
-    side4.Initialize SumTuple(middle, Array(0, 0, -blockSizeHalf)), "front", texture
-    side5.Initialize SumTuple(middle, Array(0, blockSizeHalf, 0)), "up", texture
-    side6.Initialize SumTuple(middle, Array(0, -blockSizeHalf, 0)), "down", texture
+    side1.Initialize SumTuple(middle, Array(G.blockSizeHalf, 0, 0)), "right", texture, G.blockSizeHalf
+    side2.Initialize SumTuple(middle, Array(-G.blockSizeHalf, 0, 0)), "left", texture, G.blockSizeHalf
+    side3.Initialize SumTuple(middle, Array(0, 0, G.blockSizeHalf)), "back", texture, G.blockSizeHalf
+    side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf)), "front", texture, G.blockSizeHalf
+    side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf, 0)), "up", texture, G.blockSizeHalf
+    side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf, 0)), "down", texture, G.blockSizeHalf
     
     Set b.sides = New Collection
     b.sides.Add side1
@@ -187,7 +151,7 @@ Function loadBlocks(blocks As Collection) As Collection
 
     For i = 4 To 256
         If ds.Cells(i, 7).Value <> "NONE" Then
-            statsBlocks = statsBlocks + 1
+            Stats.Blocks = Stats.Blocks + 1
             blocks.Add InitBlock(Array(ds.Cells(i, 8).Value, ds.Cells(i, 9).Value, ds.Cells(i, 10).Value), ds.Cells(i, 7).Value)
         End If
     Next i
@@ -236,7 +200,7 @@ Function CalculatePositions(allSquares2 As Collection) As Collection
         Set currentBlockSides = ReverseCollection(currentBlockSides)
         
         ' Optimizing the number of Sides to be drawn if the player is near the block
-        If b.distance <= blockSize * Sqr(3) Then
+        If b.distance <= G.blockSize * Sqr(3) Then
             For i = 1 To 6
                 allSidesPre.Add currentBlockSides(i)
             Next i
@@ -269,9 +233,9 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
     
     ' Applies textures to the Sides
     For Each sIndex In allSidesPre
-        statsVisibleSides = statsVisibleSides + 1
+        Stats.VisibleSides = Stats.VisibleSides + 1
         Set s = sIndex
-        Set textureColor = Textures.GetColorCollection(s.texture)
+        Set textureColor = T.GetColorCollection(s.texture)
         For x = 0 To 7
             For y = 0 To 7
                 Dim col As Long
@@ -309,7 +273,7 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
                 ' Checks if the Pixel is inside the field of view and not behind the player
                 If a3(2) > 0 Or b3(2) > 0 Or c3(2) > 0 Or d3(2) > 0 Then
                     If IsPointInsideFOV(a3) = TRUE Or IsPointInsideFOV(b3) = TRUE Or IsPointInsideFOV(c3) = TRUE Or IsPointInsideFOV(d3) = TRUE Then
-                        statsVisiblePixels = statsVisiblePixels + 1
+                        Stats.VisiblePixels = Stats.VisiblePixels + 1
                         Set newPixel = New pixel
                         newPixel.Initialize a3, b3, c3, d3, col 'RGB(col Mod 256, (3057486 \ 256) Mod 256, (3057486 \ 256 \ 256) Mod 256)
                         allSquares.Add newPixel
@@ -361,12 +325,12 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
             End If
             
             ' Multiplies the projected points by the screen size
-            If screenHeight < screenWidth Then
-                screenX = Int((projectedX + 1) * 0.5 * screenHeight + (screenWidth - screenHeight) / 2)
-                screenY = Int((1 - projectedY) * 0.5 * screenHeight)
+            If G.screenHeight < G.screenWidth Then
+                screenX = Int((projectedX + 1) * 0.5 * G.screenHeight + (G.screenWidth - G.screenHeight) / 2)
+                screenY = Int((1 - projectedY) * 0.5 * G.screenHeight)
             Else
-                screenX = Int((projectedX + 1) * 0.5 * screenWidth)
-                screenY = Int((1 - projectedY) * 0.5 * screenWidth + (screenHeight - screenWidth) / 2)
+                screenX = Int((projectedX + 1) * 0.5 * G.screenWidth)
+                screenY = Int((1 - projectedY) * 0.5 * G.screenWidth + (G.screenHeight - G.screenWidth) / 2)
             End If
             
             squareVertices2d.Add Array(screenX, screenY)
@@ -398,8 +362,8 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
             If minY <= 0 Then
                 minY = 1
             End If
-            If maxY > screenHeight Then
-                maxY = screenHeight
+            If maxY > G.screenHeight Then
+                maxY = G.screenHeight
             End If
             
             Call InsertCurrentTime("Data!E16") ' (stats) time log

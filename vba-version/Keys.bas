@@ -1,4 +1,5 @@
 Attribute VB_Name = "Keys"
+Option Explicit
 
 ' [Bind Keys] Shift + W/A/S/D/Q/E/R/F/X/{ } to move around
 ' + is shift; { } is ctrl
@@ -20,17 +21,17 @@ Sub bindKeys()
 End Sub
 
 Sub moveUp()
-    P.y = P.y + moveBy
+    P.y = P.y + G.moveBy
     Move
 End Sub
 
 Sub moveDown()
-    P.y = P.y - moveBy
+    P.y = P.y - G.moveBy
     Move
 End Sub
 
 Sub lookUp()
-    P.pitch = P.pitch + rotateBy
+    P.pitch = P.pitch + G.rotateBy
     If P.pitch > 90 Then
         P.pitch = 90
     End If
@@ -38,7 +39,7 @@ Sub lookUp()
 End Sub
 
 Sub lookDown()
-    P.pitch = P.pitch - rotateBy
+    P.pitch = P.pitch - G.rotateBy
     If P.pitch < -90 Then
         P.pitch = -90
     End If
@@ -48,8 +49,8 @@ End Sub
 Sub moveRight()
     Dim dx As Long
     Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * moveBy)
-    dz = CInt(C.cos(P.yaw) * moveBy)
+    dx = CInt(C.sin(P.yaw) * G.moveBy)
+    dz = CInt(C.cos(P.yaw) * G.moveBy)
     
     P.x = P.x + dz
     P.z = P.z - dx
@@ -59,8 +60,8 @@ End Sub
 Sub moveLeft()
     Dim dx As Long
     Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * moveBy)
-    dz = CInt(C.cos(P.yaw) * moveBy)
+    dx = CInt(C.sin(P.yaw) * G.moveBy)
+    dz = CInt(C.cos(P.yaw) * G.moveBy)
     
     P.x = P.x - dz
     P.z = P.z + dx
@@ -70,8 +71,8 @@ End Sub
 Sub moveFront()
     Dim dx As Long
     Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * -moveBy)
-    dz = CInt(C.cos(P.yaw) * moveBy)
+    dx = CInt(C.sin(P.yaw) * -G.moveBy)
+    dz = CInt(C.cos(P.yaw) * G.moveBy)
     
     P.x = P.x - dx
     P.z = P.z + dz
@@ -81,8 +82,8 @@ End Sub
 Sub moveBack()
     Dim dx As Long
     Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * moveBy)
-    dz = CInt(C.cos(P.yaw) * -moveBy)
+    dx = CInt(C.sin(P.yaw) * G.moveBy)
+    dz = CInt(C.cos(P.yaw) * -G.moveBy)
     
     P.x = P.x - dx
     P.z = P.z + dz
@@ -90,7 +91,7 @@ Sub moveBack()
 End Sub
 
 Sub lookLeft()
-    P.yaw = P.yaw - rotateBy
+    P.yaw = P.yaw - G.rotateBy
     If P.yaw < 0 Then
         P.yaw = P.yaw + 360
     End If
@@ -98,7 +99,7 @@ Sub lookLeft()
 End Sub
 
 Sub lookRight()
-    P.yaw = P.yaw + rotateBy
+    P.yaw = P.yaw + G.rotateBy
     If P.yaw >= 360 Then
         P.yaw = P.yaw - 360
     End If

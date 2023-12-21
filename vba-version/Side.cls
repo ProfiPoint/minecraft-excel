@@ -7,7 +7,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VBc_reatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-' Side Class Module
 Option Explicit
 
 Private distance_ As Double
@@ -85,28 +84,28 @@ End Property
 
 
 
-Public Sub Initialize(p As Variant, o As String, t As String)
+Public Sub Initialize(p As Variant, o As String, t As String, blockSizeHalf As Double)
     middlePoint = p
     orientation = o
     texture = t
 
     If o = "right" Or o = "left" Then
-        a = sumTuple(p, Array(0, -blockSizeHalf, -blockSizeHalf))
-        b = sumTuple(p, Array(0, blockSizeHalf, -blockSizeHalf))
-        d = sumTuple(p, Array(0, -blockSizeHalf, blockSizeHalf))
-        c = sumTuple(p, Array(0, blockSizeHalf, blockSizeHalf))
+        a = sumTuple(p, Array(0, -G.blockSizeHalf, -G.blockSizeHalf))
+        b = sumTuple(p, Array(0, G.blockSizeHalf, -G.blockSizeHalf))
+        d = sumTuple(p, Array(0, -G.blockSizeHalf, G.blockSizeHalf))
+        c = sumTuple(p, Array(0, G.blockSizeHalf, G.blockSizeHalf))
             
     ElseIf o = "front" Or o = "back" Then
-        a = sumTuple(p, Array(-blockSizeHalf, -blockSizeHalf, 0))
-        b = sumTuple(p, Array(-blockSizeHalf, blockSizeHalf, 0))
-        d = sumTuple(p, Array(blockSizeHalf, -blockSizeHalf, 0))
-        c = sumTuple(p, Array(blockSizeHalf, blockSizeHalf, 0))
+        a = sumTuple(p, Array(-G.blockSizeHalf, -G.blockSizeHalf, 0))
+        b = sumTuple(p, Array(-G.blockSizeHalf, G.blockSizeHalf, 0))
+        d = sumTuple(p, Array(G.blockSizeHalf, -G.blockSizeHalf, 0))
+        c = sumTuple(p, Array(G.blockSizeHalf, G.blockSizeHalf, 0))
         
     ElseIf o = "up" Or o = "down" Then
-        a = sumTuple(p, Array(-blockSizeHalf, 0, -blockSizeHalf))
-        b = sumTuple(p, Array(-blockSizeHalf, 0, blockSizeHalf))
-        d = sumTuple(p, Array(blockSizeHalf, 0, -blockSizeHalf))
-        c = sumTuple(p, Array(blockSizeHalf, 0, blockSizeHalf))
+        a = sumTuple(p, Array(-G.blockSizeHalf, 0, -G.blockSizeHalf))
+        b = sumTuple(p, Array(-G.blockSizeHalf, 0, G.blockSizeHalf))
+        d = sumTuple(p, Array(G.blockSizeHalf, 0, -G.blockSizeHalf))
+        c = sumTuple(p, Array(G.blockSizeHalf, 0, G.blockSizeHalf))
     End If
 End Sub
 

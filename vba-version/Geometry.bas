@@ -1,4 +1,5 @@
 Attribute VB_Name = "Geometry"
+Option Explicit
 
 ' [Calculate the sum of two tuples]
 Function SumTuple(t1 As Variant, t2 As Variant) As Variant
@@ -74,12 +75,12 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     
     ' Check if the point is inside the pyramid (frustum)
     Dim distanceToOrigin As Double
-    If screenWidth > screenHeight Then
-        If (radius * screenWidth / screenHeight) - projectedPoint(0) >= 0  And radius - projectedPoint(1) >= 0 Then
+    If G.screenWidth > G.screenHeight Then
+        If (radius * G.screenWidth / G.screenHeight) - projectedPoint(0) >= 0  And radius - projectedPoint(1) >= 0 Then
             result = TRUE
         End If
     Else
-        If radius-projectedPoint(0) >= 0  And (radius * screenHeight / screenWidth) - projectedPoint(1) >= 0 Then
+        If radius-projectedPoint(0) >= 0  And (radius * G.screenHeight / G.screenWidth) - projectedPoint(1) >= 0 Then
             result = TRUE
         End If
     End If
