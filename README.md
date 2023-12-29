@@ -38,7 +38,7 @@ Please note that this project is designed to work with specific versions of Micr
 Follow these steps to install the Minecraft-Excel 3D Renderer:
 
 1. **Download Minecraft.xlsm:**
-   - Download the `Minecraft.xlsm` file from the project repository.
+   - Download the [`Minecraft.xlsm`](https://github.com/ProfiPoint/minecraft-excel/blob/main/Minecraft.xlsm) file from the project repository.
 
 2. **Open File Properties:**
    - Right-click on the downloaded file.
@@ -91,7 +91,7 @@ If you prefer a manual installation or encounter any issues with the provided fi
 4. **Insert Modules and Class Modules:**
    - In the VBA editor, you'll see a project explorer on the left.
    - Right-click on your Excel file in the project explorer.
-   - Choose "Import File" and manually add the following files into the Macros:
+   - Choose "Import File" and manually add the following from `vba-version` files into the Macros:
 
      - `.bas` files: These are module files.
      - `.cls` files: These are class module files.
