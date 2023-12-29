@@ -1,10 +1,6 @@
 Attribute VB_Name = "Functions"
 Option Explicit
 
-Function ConvertToString(t1 As Variant) As String
-    ConvertToString = CStr(t1(0)) & "," & CStr(t1(1)) & "," & CStr(t1(2))
-End Function
-
 ' [Optimalization function - delete duplicate sides in the same middle]
 ' Creates a disctionary with middle points as keys and sides as values and then converts it back to a collection
 Sub RemoveDuplicateSides(allSidesPre As Collection)
@@ -34,6 +30,18 @@ Sub RemoveDuplicateSides(allSidesPre As Collection)
         allSidesPre.Add sideDict(key)
     Next key
 End Sub
+
+' [Returns reversed collection]
+Function ReverseCollection(originalCollection As Collection) As Collection
+    Dim reversedCollection As New Collection
+    Dim i As Long
+    
+    For i = originalCollection.Count To 1 Step -1
+        reversedCollection.Add originalCollection(i)
+    Next i
+    
+    Set ReverseCollection = reversedCollection
+End Function
 
 ' [Returns sides sorted from furthest to closest to player]
 Function SortByDistance(collectionOfSides As Collection) As Collection
@@ -83,7 +91,6 @@ Sub QuickSort(arr() As Double, indices() As Long, low As Long, high As Long)
                 j = j - 1
             Loop
             If i <= j Then
-                ' Swap values at i and j, and corresponding indices
                 temp = arr(i)
                 arr(i) = arr(j)
                 arr(j) = temp
@@ -102,15 +109,3 @@ Sub QuickSort(arr() As Double, indices() As Long, low As Long, high As Long)
         If i < high Then QuickSort arr, indices, i, high
     End If
 End Sub
-
-' [Returns reversed collection]
-Function ReverseCollection(originalCollection As Collection) As Collection
-    Dim reversedCollection As New Collection
-    Dim i As Long
-    
-    For i = originalCollection.Count To 1 Step -1
-        reversedCollection.Add originalCollection(i)
-    Next i
-    
-    Set ReverseCollection = reversedCollection
-End Function

@@ -66,12 +66,19 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     projectedPoint(0) = Abs(point(0))
     projectedPoint(1) = Abs(point(1))
     
+    Dim result As Boolean
+    result = FALSE
+    ' Check if the point is behind the player
+    If point(2) <= 0 Then
+        IsPointInsideFOV = result
+        Exit Function
+    End If
+
     ' Calculate radius of the circle on the xy-plane assuming FOV = 90 degrees
     Dim radius As Double
     radius = C.tan(90 / 2) * point(2)
     
-    Dim result As Boolean
-    result = FALSE
+    
     
     ' Check if the point is inside the pyramid (frustum)
     Dim distanceToOrigin As Double

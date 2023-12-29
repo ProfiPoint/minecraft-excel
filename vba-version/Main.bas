@@ -1,6 +1,4 @@
 Attribute VB_Name = "Main"
-Public blocks As Collection
-
 ' [Public variables - Classes]
 Public P As New Player
 Public G As New Game
@@ -59,12 +57,12 @@ Sub Init()
     Next i
     Call InsertCurrentTime("Data!E13") ' (stats) time log
     Move ' Calculates the first frame
-    Keys.bindKeys ' Binds the keys
+    bindKeys ' Binds the keys
 End Sub
 
 ' [Unbinds the keys and resets the game]
 Sub EndGame()
-    Keys.freeKeys
+    freeKeys
     Call SetBackgroundColor
     ds.Range("E19").value = "not running"
 End Sub
@@ -89,7 +87,7 @@ Sub Move()
     
     ' Calculates and sets pixels of the current frame
     Dim pixels As Collection
-    Set pixels = CalculatePositions(pixels)
+    Set pixels = CalculateSides(pixels)
     Set pixels = ApplyTexture(pixels)
     Set pixels = ConvertDraw2D(pixels)
 
@@ -146,7 +144,7 @@ Function InitBlock(middle As Variant, texture As String) As Block
 End Function
 
 ' [Loads all Blocks (type and coordinates) from the data sheet]
-Function loadBlocks(blocks As Collection) As Collection
+Function LoadBlocks(blocks As Collection) As Collection
     Dim i As Long
 
     For i = 4 To 256
@@ -156,14 +154,14 @@ Function loadBlocks(blocks As Collection) As Collection
         End If
     Next i
     
-    Set loadBlocks = blocks
+    Set LoadBlocks = blocks
 End Function
 
 ' [Calculates the positions and rotations of Block Sides based on the player in 3D space]
-Function CalculatePositions(allSquares2 As Collection) As Collection
+Function CalculateSides(allSquares2 As Collection) As Collection
     Dim blocks As Collection
     Set blocks = New Collection
-    Set blocks = loadBlocks(blocks)
+    Set blocks = LoadBlocks(blocks)
     Dim allSidesPre As New Collection
     
     
@@ -215,7 +213,7 @@ Function CalculatePositions(allSquares2 As Collection) As Collection
     Set allSidesPre = SortByDistance(allSidesPre)
     RemoveDuplicateSides allSidesPre
 
-    Set CalculatePositions = allSidesPre
+    Set CalculateSides = allSidesPre
 End Function
 
 ' [Apply textures to the Sides]
@@ -271,13 +269,11 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
                 End If
                 
                 ' Checks if the Pixel is inside the field of view and not behind the player
-                If a3(2) > 0 Or b3(2) > 0 Or c3(2) > 0 Or d3(2) > 0 Then
-                    If IsPointInsideFOV(a3) = TRUE Or IsPointInsideFOV(b3) = TRUE Or IsPointInsideFOV(c3) = TRUE Or IsPointInsideFOV(d3) = TRUE Then
-                        Stats.VisiblePixels = Stats.VisiblePixels + 1
-                        Set newPixel = New pixel
-                        newPixel.Initialize a3, b3, c3, d3, col 'RGB(col Mod 256, (3057486 \ 256) Mod 256, (3057486 \ 256 \ 256) Mod 256)
-                        allSquares.Add newPixel
-                    End If
+                If IsPointInsideFOV(a3) = TRUE Or IsPointInsideFOV(b3) = TRUE Or IsPointInsideFOV(c3) = TRUE Or IsPointInsideFOV(d3) = TRUE Then
+                    Stats.VisiblePixels = Stats.VisiblePixels + 1
+                    Set newPixel = New pixel
+                    newPixel.Initialize a3, b3, c3, d3, col
+                    allSquares.Add newPixel
                 End If
             Next y
         Next x
@@ -314,15 +310,12 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
             squareVertexes.Add intersectionPoint
         
             ' Projects 3D points to 2D points
-            If Int(intersectionPoint(2)) <> 0 Then
-                projectedX = intersectionPoint(0) / intersectionPoint(2)
-                projectedY = intersectionPoint(1) / intersectionPoint(2)
-            Else
-                ' Prevents division by zero
+            If Int(intersectionPoint(2)) = 0 Then
                 intersectionPoint = Array(intersectionPoint(0), intersectionPoint(1), 1)
-                projectedX = intersectionPoint(0) / intersectionPoint(2)
-                projectedY = intersectionPoint(1) / intersectionPoint(2)
             End If
+            
+            projectedX = intersectionPoint(0) / intersectionPoint(2)
+            projectedY = intersectionPoint(1) / intersectionPoint(2)
             
             ' Multiplies the projected points by the screen size
             If G.screenHeight < G.screenWidth Then

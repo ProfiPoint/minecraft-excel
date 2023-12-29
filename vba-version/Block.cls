@@ -12,7 +12,6 @@ Option Explicit
 Private distance_ As Double
 Private point_ As Variant
 Private sides_ As Collection
-Private playerIsInside_ As Boolean
 
 Public Property Get distance() As Double
     distance = distance_
@@ -39,14 +38,6 @@ End Property
 
 Public Property Set sides(value As Collection)
     Set sides_ = value
-End Property
-
-Public Property Get playerIsInside() As Boolean
-    playerIsInside = playerIsInside_
-End Property
-
-Public Property Let playerIsInside(value As Boolean)
-    playerIsInside_ = value
 End Property
 
 Public Sub Initialize(P As Variant)
