@@ -6,21 +6,33 @@ Public C As New Calculations
 Public T As New Textures
 Public Stats As New Stats
 
+' [Public variables - Other]
+Public HasBeenInitialized As Boolean ' Checks if the game has been initialized
+
 ' [Public variables - Sheets]
 Public ms As Worksheet ' Minecraft
 Public ts As Worksheet ' Textures
 Public ds As Worksheet ' Data
 
+Sub StartGame()
+    Init
+    Move
+    bindKeys
+End Sub
+
 ' [Initailize the game]
-Sub Init()
-    Call InsertCurrentTime("Data!E12") ' (stats) time log
-    
-    ' Sets the sheets
+Sub Init() 
+    ' Defines the sheets
     Set ms = ThisWorkbook.Sheets("Minecraft")
     Set ts = ThisWorkbook.Sheets("Textures")
     Set ds = ThisWorkbook.Sheets("Data")
     
+    ' Sets the sheets
+    Call InsertCurrentTime("Data!E12") ' (stats) time log
+
+    HasBeenInitialized = TRUE
     CheckDefaultValues
+
 
     ' Applies player settings
     P.x = CInt(ds.Range("B4").Value)
@@ -56,8 +68,6 @@ Sub Init()
         C.tan(i) = tan(i * (3.14159265359 / 180)) ' Calculate and set the sin values
     Next i
     Call InsertCurrentTime("Data!E13") ' (stats) time log
-    Move ' Calculates the first frame
-    bindKeys ' Binds the keys
 End Sub
 
 ' [Unbinds the keys and resets the game]
@@ -69,6 +79,9 @@ End Sub
 
 ' [Calculates the current frame]
 Sub Move()
+    If Not HasBeenInitialized = TRUE Then
+        Init
+    End If
     ' Resets stats values
     Stats.Blocks = 0
     Stats.VisibleSides = 0

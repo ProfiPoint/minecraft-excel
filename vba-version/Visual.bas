@@ -53,6 +53,9 @@ End Sub
 
 ' [Sets the player variables from the Data sheet]
 Sub SetPlayer()
+    If Not HasBeenInitialized = TRUE Then
+        Init
+    End If
     P.x = ds.Range("B4").value
     P.y = ds.Range("B5").value
     P.z = ds.Range("B6").value
@@ -62,6 +65,9 @@ End Sub
 
 ' [Sets the enviroment variables from the Data sheet]
 Sub SetVariables()
+    If Not HasBeenInitialized = TRUE Then
+        Init
+    End If
     G.blockSize = ds.Range("E4").value
     G.screenWidth = ds.Range("E5").value
     G.screenHeight = ds.Range("E6").value
