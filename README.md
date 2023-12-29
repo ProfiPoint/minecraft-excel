@@ -1,6 +1,6 @@
 # Minecraft-Excel ![Minecraft Excel Logo](screenshots/minecraf-excel-logo.png) 
-Introduction
-This project is a unique exploration into the world of 3D rendering within the familiar confines of Microsoft Excel. The primary goal is to understand and implement the basic principles of rendering 3D objects, with a specific focus on cubes inspired by the iconic game Minecraft.
+##Introduction
+This project is a unique exploration into the world of 3D rendering within the familiar confines of Microsoft Excel. The primary goal is to understand and implement the basic principles of rendering 3D objects, with a specific focus on cubes inspired by the iconic game Minecraft. This project is part of final work of Thesis for Programming Seminar 2023/2024.
 
 ## About:
 
@@ -17,7 +17,7 @@ Optimization Strategies: Address environment limitations and explore opportuniti
 Why Minecraft-Excel?
 This project serves as a creative endeavor to showcase the possibilities of combining spreadsheet software with 3D rendering. While Excel may seem an unconventional choice, the aim is to push the boundaries and provide a unique perspective on the fundamentals of 3D environments.
 
-Note: The journey begins with a theoretical exploration, moves on to the nitty-gritty details of implementation, and concludes with optimization strategies. So, buckle up and let's explore the fascinating intersection of Excel and 3D rendering! 🌐✨
+Note: The journey begins with a theoretical exploration, moves on to the nitty-gritty details of implementation, and concludes with optimization strategies. So, buckle up and let's explore the fascinating intersection of Excel and 3D rendering!
 
 # Requirements
 
@@ -177,8 +177,9 @@ Track program speed through precise timestamps:
 
 ## Credits
 
-This program was created with passion and dedication by [Ondřej Čopák]. Special thanks to the following contributors and resources:
-ProfiPoint 2023
+This program was created with passion and dedication by **Ondřej Čopák**. Special thanks to the following contributors and resources:
+
+**ProfiPoint 2023**
 
 ## Usage and Credits
 
