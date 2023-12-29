@@ -1,3 +1,3 @@
 # minecraft-excel
-![Hero image for Microsoft PowerToys]([screenshots/minecraf-excel-logo.png])
+![Hero image for Microsoft PowerToys]([https://github.com/ProfiPoint/minecraft-excel/blob/main/screenshots/minecraf-excel-logo.png])
 School seminar open source code for Programming Seminar 2023/2024
