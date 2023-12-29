@@ -1,8 +1,8 @@
 ![Minecraft Excel Logo](screenshots/minecraf-excel-logo.png) 
-##Introduction
+## Introduction
 This project is a unique exploration into the world of 3D rendering within the familiar confines of Microsoft Excel. The primary goal is to understand and implement the basic principles of rendering 3D objects, with a specific focus on cubes inspired by the iconic game Minecraft. This project is part of final work of Thesis for Programming Seminar 2023/2024.
 
-## About:
+## About
 
 Objective: Delve into the fundamental principles of 3D rendering.
 Inspiration: Draw inspiration from the global trend of porting older games, like Doom, into diverse environments.
