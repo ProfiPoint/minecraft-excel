@@ -23,6 +23,7 @@ Note: The journey begins with a theoretical exploration, moves on to the nitty-g
 - Basic implementation of 3D positions of blocks and conversion into 2D based on Perspective projection
 - Pixel rendering based on Brehensam line algorithm
 - Fully VBA implementation; O(n^3); 50 cubes avrg. 1 minute of render time
+  
 ![Minecraft Scheme EN](screenshots/schemeEN.png) 
 
 # Requirements
@@ -179,6 +180,12 @@ Track program speed through precise timestamps:
 - *Total Frame Calculation Time:* Shows the overall time for frame calculation from user input to cell display completion. Utilize this indicator for program optimization and testing.
 
 **Note:** Modify cube textures in the 3rd sheet named "Textures" to personalize the appearance of the cubes in the program.
+
+## Animations
+
+Modified version of program can take automaticly screenshots and render frames without any user interaction. Modified version of the program with sample animations are located in: [`Animations`](https://github.com/ProfiPoint/minecraft-excel/blob/main/animations)
+
+![Island Animation](screenshots/islandRotation_Animation.gif) 
 
 ## Credits
 
