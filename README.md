@@ -185,6 +185,12 @@ Track program speed through precise timestamps:
 
 Modified version of program can take automaticly screenshots and render frames without any user interaction. Modified version of the program with sample animations are located in: [`Animations`](https://github.com/ProfiPoint/minecraft-excel/blob/main/animations)
 
+- Add *SaveRangeAsPNG Sub* from [`_addToMain.bas`](https://github.com/ProfiPoint/minecraft-excel/blob/main/animations/_addToMain.bas) into *Main.bas*
+- You can create simmilar Sub like *LoopThroughNumbers* Sub to auto-rotate camera around the build. Add to the end of the Sub *Move Sub*.
+- If you are using any Sub from *Keys.bas*, you should disable (comment with ' the Move at the end of each Key-Sub, in order to stop multiple rendering of the same time)
+
+After you can use any program to make gif/video out of the png frames.
+
 ![Island Animation](screenshots/islandRotation_Animation.gif) 
 
 ## Credits
