@@ -19,10 +19,15 @@ This project serves as a creative endeavor to showcase the possibilities of comb
 
 Note: The journey begins with a theoretical exploration, moves on to the nitty-gritty details of implementation, and concludes with optimization strategies. So, buckle up and let's explore the fascinating intersection of Excel and 3D rendering!
 
+# Implementation
+- Basic implementation of 3D positions of blocks and conversion into 2D based on Perspective projection
+- Pixel rendering based on Brehensam line algorithm
+- Fully VBA implementation; O(n^3); 50 cubes avrg. 1 minute of render time
+![Minecraft Scheme EN](screenshots/schemeEN.png) 
+
 # Requirements
 
 To run the Minecraft-Excel 3D Renderer, ensure your system meets the following requirements:
-
 - **Microsoft Excel:**
   - Version: Excel 2016 or older
   - Edition: .exe version (not web app)
@@ -160,7 +165,7 @@ Customize cube textures and their center positions:
 - *Default Texture:* NONE (not included)
 - *Available Textures:* Choose from 16 predefined textures.
 - *Coordinates:* Ensure unique coordinates as multiples of the cube's side length (Blocksize) to prevent overlap.
-
+- **NEW** *Half-block (slab):* Choose block type (block / slab)
 ### Texture List
 
 Explore the available cube textures through this list.
