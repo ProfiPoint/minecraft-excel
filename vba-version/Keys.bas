@@ -16,7 +16,7 @@ Sub BindKeys()
     Application.OnKey "+R", "LookUp" ' x+ pitch
     Application.OnKey "+F", "LookDown" ' x- pitch
     
-    Application.OnKey "+Q", "LookLeft" ' y- yaw 
+    Application.OnKey "+Q", "LookLeft" ' y- yaw
     Application.OnKey "+E", "LookRight" 'y+ yaw
 End Sub
 
@@ -118,7 +118,7 @@ Sub LookDown()
 End Sub
 
 Sub LookLeft()
-    If Not HasBeenInitialized = TRUE Then
+    If Not HasBeenInitialized = True Then
         Init
     End If
     P.yaw = P.yaw - G.rotateBy
@@ -129,7 +129,7 @@ Sub LookLeft()
 End Sub
 
 Sub LookRight()
-    If Not HasBeenInitialized = TRUE Then
+    If Not HasBeenInitialized = True Then
         Init
     End If
     P.yaw = P.yaw + G.rotateBy

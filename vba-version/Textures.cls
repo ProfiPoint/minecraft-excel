@@ -1,23 +1,28 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "Textures"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
 Option Explicit
 
 Private colorCollections As Collection
+Private blockTypeCollections As Collection
+Private Type_ As String
 
-Public Sub LoadInput(textureName As String, inputRange As Range)
-    Dim C As Long, r As Long
+Public Property Get textureType() As String
+    textureType = Type_
+End Property
+
+Public Property Let textureType(value As String)
+    Type_ = value
+End Property
+
+Public Sub LoadInput(textureName As String, blockType As String, inputRange As Range)
+    Dim c As Long, r As Long
     Dim innerCollection As Collection
     
     ' Check if the colorCollections collection is initialized
     If colorCollections Is Nothing Then
         Set colorCollections = New Collection
+    End If
+
+    If blockTypeCollections Is Nothing Then
+        Set blockTypeCollections = New Collection
     End If
     
     ' Check if the textureName already exists; if not, create a new collection
@@ -25,15 +30,22 @@ Public Sub LoadInput(textureName As String, inputRange As Range)
         Dim newCollection As New Collection
         colorCollections.Add newCollection, key:=textureName
     End If
+
+    If Not BlockCollectionExists(textureName) Then
+        Dim newCollection2 As New Collection
+        blockTypeCollections.Add newCollection2, key:=textureName
+    End If
     
+    blockTypeCollections(textureName).Add blockType
+
     ' Store colors in the Collection of Collection associated with the textureName
     Set innerCollection = New Collection
-    For r = 1 To 26
+    For r = 1 To 24
         Set innerCollection = New Collection
-        For C = 1 To 8
+        For c = 1 To 32
             ' Store color in inner collection
-            innerCollection.Add inputRange.Cells(27 - r, C).Interior.color
-        Next C
+            innerCollection.Add inputRange.Cells(25 - r, c).Interior.color
+        Next c
         ' Store inner collection in the main collection associated with the textureName
         colorCollections(textureName).Add innerCollection
     Next r
@@ -44,6 +56,54 @@ Public Function GetColorCollection(textureName As String) As Collection
     Set GetColorCollection = colorCollections(textureName)
 End Function
 
+Public Function GetBlockType(textureName As String) As String
+    ' Return the stored color collection associated with the textureName
+    GetBlockType = blockTypeCollections(textureName)(1)
+End Function
+
+Public Sub SaveTexturesToTxt()
+    ' Save textures to a text file (C:/Users/profpoint/result.txt)
+    Dim filePath As String
+    Dim fileNumber As Integer
+    Dim textureName As Variant
+    
+    ' Set the file path
+    filePath = "C:/Users/profpoint/result.txt"
+    
+    ' Open the file for writing
+    fileNumber = FreeFile
+    Open filePath For Output As fileNumber
+    
+    ' Loop through each textureName in colorCollections
+    For Each textureName In colorCollections.Keys
+        ' Write texture information to the file
+        Print #fileNumber, textureName & "," & blockTypeCollections(textureName)(1) & "," & GetHexColors(textureName)
+    Next textureName
+    
+    ' Close the file
+    Close fileNumber
+End Sub
+
+Private Function GetHexColors(textureName As String) As String
+    ' Convert colors to hex and concatenate them
+    Dim hexColors As String
+    Dim innerCollection As Collection
+    Dim color As Variant
+    
+    Set innerCollection = colorCollections(textureName)
+    
+    For Each color In innerCollection
+        hexColors = hexColors & "," & RGBToHex(color)
+    Next color
+    
+    GetHexColors = Mid(hexColors, 2) ' Remove the leading comma
+End Function
+
+Private Function RGBToHex(rgbColor As Long) As String
+    ' Convert RGB color to hex
+    RGBToHex = Right("000000" & Hex(rgbColor), 6)
+End Function
+
 Private Function CollectionExists(key As Variant) As Boolean
     ' Check if the collection with the specified key exists
     On Error Resume Next
@@ -51,3 +111,9 @@ Private Function CollectionExists(key As Variant) As Boolean
     On Error GoTo 0
 End Function
 
+Private Function BlockCollectionExists(key As Variant) As Boolean
+    ' Check if the collection with the specified key exists
+    On Error Resume Next
+    BlockCollectionExists = Not blockTypeCollections(key) Is Nothing
+    On Error GoTo 0
+End Function

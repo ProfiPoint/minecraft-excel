@@ -18,15 +18,15 @@ Function DistancePoint(t1 As Variant) As Double
 End Function
 
 ' [Calculate the 3D position of given 3D point relative to the player's position and camera orientation]
-Function CalculateCoordinates(Point As Variant) As Variant
+Function CalculateCoordinates(point As Variant) As Variant
     Dim translatedVertex(0 To 2) As Double
     Dim rotatedVertexYaw(0 To 2) As Double
     Dim rotatedVertexPitch(0 To 2) As Double
     
     ' Translate the point relative to the player's position
-    translatedVertex(0) = Point(0) - P.x
-    translatedVertex(1) = Point(1) - P.y
-    translatedVertex(2) = Point(2) - P.z
+    translatedVertex(0) = point(0) - P.x
+    translatedVertex(1) = point(1) - P.y
+    translatedVertex(2) = point(2) - P.z
     
     ' Rotate the point around the player's yaw
     rotatedVertexYaw(0) = translatedVertex(0) * C.cos(P.yaw) - translatedVertex(2) * C.sin(P.yaw)
@@ -67,7 +67,7 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     projectedPoint(1) = Abs(point(1))
     
     Dim result As Boolean
-    result = FALSE
+    result = False
     ' Check if the point is behind the player
     If point(2) <= 0 Then
         IsPointInsideFOV = result
@@ -83,12 +83,12 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     ' Check if the point is inside the pyramid (frustum)
     Dim distanceToOrigin As Double
     If G.screenWidth > G.screenHeight Then
-        If (radius * G.screenWidth / G.screenHeight) - projectedPoint(0) >= 0  And radius - projectedPoint(1) >= 0 Then
-            result = TRUE
+        If (radius * G.screenWidth / G.screenHeight) - projectedPoint(0) >= 0 And radius - projectedPoint(1) >= 0 Then
+            result = True
         End If
     Else
-        If radius-projectedPoint(0) >= 0  And (radius * G.screenHeight / G.screenWidth) - projectedPoint(1) >= 0 Then
-            result = TRUE
+        If radius - projectedPoint(0) >= 0 And (radius * G.screenHeight / G.screenWidth) - projectedPoint(1) >= 0 Then
+            result = True
         End If
     End If
     

@@ -55,10 +55,10 @@ Public Property Let d3(value As Variant)
     d3_ = value
 End Property
 
-Public Sub Initialize(a As Variant, b As Variant, c As Variant, d As Variant, col As Long)
+Public Sub Initialize(a As Variant, b As Variant, C As Variant, d As Variant, col As Long)
     color = col
     a3 = a
     b3 = b
-    c3 = c
+    c3 = C
     d3 = d
 End Sub

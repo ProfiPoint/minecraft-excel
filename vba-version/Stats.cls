@@ -15,11 +15,11 @@ Private VisibleSides_ As Long
 Private Cells_ As Long
 Private RowsDrawn_ As Long
 
-Public Property Get Blocks() As Long
-    Blocks = Blocks_
+Public Property Get blocks() As Long
+    blocks = Blocks_
 End Property
 
-Public Property Let Blocks(value As Long)
+Public Property Let blocks(value As Long)
     Blocks_ = value
 End Property
 

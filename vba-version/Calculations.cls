@@ -42,3 +42,4 @@ Public Property Let tan(Index As Long, value As Double)
     tan_(Index) = value
 End Property
 
+

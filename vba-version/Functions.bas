@@ -7,7 +7,7 @@ Sub RemoveDuplicateSides(allSidesPre As Collection)
     Dim sideDict As Object
     Set sideDict = CreateObject("Scripting.Dictionary")
     
-    Dim side As Side
+    Dim side As side
     For Each side In allSidesPre
         Dim middlePointKey As String
         middlePointKey = CStr(side.middlePoint(0)) & "-" & CStr(side.middlePoint(1)) & "-" & CStr(side.middlePoint(2))

@@ -17,11 +17,57 @@ Public ds As Worksheet ' Data
 Sub StartGame()
     Init
     Move
-    bindKeys
+    BindKeys
+End Sub
+
+Sub StartGame2()
+    Init2
+    Move
+    BindKeys
 End Sub
 
 ' [Initailize the game]
-Sub Init() 
+
+Sub Init2()
+    ' Defines the sheets
+    Set ms = ThisWorkbook.Sheets("Minecraft")
+    Set ts = ThisWorkbook.Sheets("Textures")
+    Set ds = ThisWorkbook.Sheets("Data")
+    
+    HasBeenInitialized = True
+    CheckDefaultValues
+
+    ' Applies player settings
+    P.x = CInt(ds.Range("B4").value)
+    P.y = CInt(ds.Range("B5").value)
+    P.z = CInt(ds.Range("B6").value)
+    P.yaw = CInt(ds.Range("B9").value)
+    P.pitch = CInt(ds.Range("B10").value)
+    
+    ' Loads block textures
+    T.LoadInput "grass", "block", ts.Range("AV9:CA32")
+    T.LoadInput "dirt", "block", ts.Range("CJ9:DO32")
+    T.LoadInput "stone", "block", ts.Range("DX9:FC32")
+    T.LoadInput "wood", "block", ts.Range("FL9:GQ32")
+    T.LoadInput "bedrock", "block", ts.Range("GZ9:IE32")
+    T.LoadInput "cobblestone", "block", ts.Range("IN9:JS32")
+    T.LoadInput "diamond", "block", ts.Range("KB9:LG32")
+    T.LoadInput "gold", "block", ts.Range("LP9:MU32")
+    T.LoadInput "ice", "block", ts.Range("AV43:CA66")
+    T.LoadInput "sand", "block", ts.Range("CJ43:DO66")
+    T.LoadInput "tnt", "block", ts.Range("DX43:FC66")
+    T.LoadInput "brick", "block", ts.Range("FL43:GQ66")
+    T.LoadInput "crafting", "block", ts.Range("GZ43:IE66")
+    T.LoadInput "leaves", "block", ts.Range("IN43:JS66")
+    T.LoadInput "rainbow", "block", ts.Range("KB43:LG66")
+    T.LoadInput "stone_slab", "slab", ts.Range("CJ77:DO100")
+
+    T.SaveTexturesToTxt()
+
+    ' Precalculates cos, sin and tan values
+End Sub
+
+Sub Init()
     ' Defines the sheets
     Set ms = ThisWorkbook.Sheets("Minecraft")
     Set ts = ThisWorkbook.Sheets("Textures")
@@ -30,34 +76,35 @@ Sub Init()
     ' Sets the sheets
     Call InsertCurrentTime("Data!E12") ' (stats) time log
 
-    HasBeenInitialized = TRUE
+    HasBeenInitialized = True
     CheckDefaultValues
 
 
     ' Applies player settings
-    P.x = CInt(ds.Range("B4").Value)
-    P.y = CInt(ds.Range("B5").Value)
-    P.z = CInt(ds.Range("B6").Value)
-    P.yaw = CInt(ds.Range("B9").Value)
-    P.pitch = CInt(ds.Range("B10").Value)
+    P.x = CInt(ds.Range("B4").value)
+    P.y = CInt(ds.Range("B5").value)
+    P.z = CInt(ds.Range("B6").value)
+    P.yaw = CInt(ds.Range("B9").value)
+    P.pitch = CInt(ds.Range("B10").value)
     
     ' Loads block textures
-    T.LoadInput "grass", ts.Range("K10:R17")
-    T.LoadInput "dirt", ts.Range("AA10:AH35")
-    T.LoadInput "stone", ts.Range("AQ10:AX35")
-    T.LoadInput "wood", ts.Range("BG10:BN35")
-    T.LoadInput "bedrock", ts.Range("BW10:CD35")
-    T.LoadInput "cobblestone", ts.Range("CM10:CT35")
-    T.LoadInput "diamond", ts.Range("DC10:DJ35")
-    T.LoadInput "gold", ts.Range("DS10:DZ35")
-    T.LoadInput "ice", ts.Range("EI10:EP35")
-    T.LoadInput "sand", ts.Range("EY10:FF35")
-    T.LoadInput "tnt", ts.Range("FO10:FV35")
-    T.LoadInput "brick", ts.Range("GE10:GL35")
-    T.LoadInput "crafting", ts.Range("GU10:HB35")
-    T.LoadInput "leaves", ts.Range("HK10:HR35")
-    T.LoadInput "rainbow", ts.Range("IA10:IH35")
-    
+    T.LoadInput "grass", "block", ts.Range("AV9:CA32")
+    T.LoadInput "dirt", "block", ts.Range("CJ9:DO32")
+    T.LoadInput "stone", "block", ts.Range("DX9:FC32")
+    T.LoadInput "wood", "block", ts.Range("FL9:GQ32")
+    T.LoadInput "bedrock", "block", ts.Range("GZ9:IE32")
+    T.LoadInput "cobblestone", "block", ts.Range("IN9:JS32")
+    T.LoadInput "diamond", "block", ts.Range("KB9:LG32")
+    T.LoadInput "gold", "block", ts.Range("LP9:MU32")
+    T.LoadInput "ice", "block", ts.Range("AV43:CA66")
+    T.LoadInput "sand", "block", ts.Range("CJ43:DO66")
+    T.LoadInput "tnt", "block", ts.Range("DX43:FC66")
+    T.LoadInput "brick", "block", ts.Range("FL43:GQ66")
+    T.LoadInput "crafting", "block", ts.Range("GZ43:IE66")
+    T.LoadInput "leaves", "block", ts.Range("IN43:JS66")
+    T.LoadInput "rainbow", "block", ts.Range("KB43:LG66")
+    T.LoadInput "stone_slab", "slab", ts.Range("CJ77:DO100")
+
     ds.Range("E19").value = "running" ' (stats) status log
     
     ' Precalculates cos, sin and tan values
@@ -72,18 +119,18 @@ End Sub
 
 ' [Unbinds the keys and resets the game]
 Sub EndGame()
-    freeKeys
+    FreeKeys
     Call SetBackgroundColor
     ds.Range("E19").value = "not running"
 End Sub
 
 ' [Calculates the current frame]
 Sub Move()
-    If Not HasBeenInitialized = TRUE Then
+    If Not HasBeenInitialized = True Then
         Init
     End If
     ' Resets stats values
-    Stats.Blocks = 0
+    Stats.blocks = 0
     Stats.VisibleSides = 0
     Stats.VisiblePixels = 0
     Stats.Cells = 0
@@ -92,8 +139,8 @@ Sub Move()
     ds.Range("E19").value = "calculating..." ' (stats) status log
     Call InsertCurrentTime("Data!E14") ' (stats) time log
     
-    If G.instantDrawing = TRUE Then
-        Application.ScreenUpdating = FALSE
+    If G.instantDrawing = True Then
+        Application.ScreenUpdating = False
     End If
     
     Call SetBackgroundColor
@@ -104,47 +151,60 @@ Sub Move()
     Set pixels = ApplyTexture(pixels)
     Set pixels = ConvertDraw2D(pixels)
 
-    If G.instantDrawing = TRUE Then
-        Application.ScreenUpdating = TRUE
+    If G.instantDrawing = True Then
+        Application.ScreenUpdating = True
     End If
     
     ' (stats) writes all stats values
     Call InsertCurrentTime("Data!E17") ' (stats) time log
     Call WritePlayer
     
-    ds.Range("B13").Value = Stats.Blocks
-    ds.Range("B16").Value = Stats.VisibleSides
-    ds.Range("B17").Value = Stats.VisiblePixels
-    ds.Range("B18").Value = Stats.Cells
-    ds.Range("B19").Value = Stats.RowsDrawn
+    ds.Range("B13").value = Stats.blocks
+    ds.Range("B16").value = Stats.VisibleSides
+    ds.Range("B17").value = Stats.VisiblePixels
+    ds.Range("B18").value = Stats.Cells
+    ds.Range("B19").value = Stats.RowsDrawn
     ds.Range("E19").value = "running"
 End Sub
 
 ' [Creates 6 Sides of a Block when creating a new Block]
 Function InitBlock(middle As Variant, texture As String) As Block
     Dim b As Block
+    Dim blockType As String
     Set b = New Block
+    blockType = T.GetBlockType(texture)
+
     b.Initialize (middle)
     
-    Dim side1 As Side
-    Set side1 = New Side
-    Dim side2 As Side
-    Set side2 = New Side
-    Dim side3 As Side
-    Set side3 = New Side
-    Dim side4 As Side
-    Set side4 = New Side
-    Dim side5 As Side
-    Set side5 = New Side
-    Dim side6 As Side
-    Set side6 = New Side
+    Dim side1 As side
+    Set side1 = New side
+    Dim side2 As side
+    Set side2 = New side
+    Dim side3 As side
+    Set side3 = New side
+    Dim side4 As side
+    Set side4 = New side
+    Dim side5 As side
+    Set side5 = New side
+    Dim side6 As side
+    Set side6 = New side
     
-    side1.Initialize SumTuple(middle, Array(G.blockSizeHalf, 0, 0)), "right", texture, G.blockSizeHalf
-    side2.Initialize SumTuple(middle, Array(-G.blockSizeHalf, 0, 0)), "left", texture, G.blockSizeHalf
-    side3.Initialize SumTuple(middle, Array(0, 0, G.blockSizeHalf)), "back", texture, G.blockSizeHalf
-    side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf)), "front", texture, G.blockSizeHalf
-    side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf, 0)), "up", texture, G.blockSizeHalf
-    side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf, 0)), "down", texture, G.blockSizeHalf
+    If blockType = "block" Then
+        side1.Initialize SumTuple(middle, Array(G.blockSizeHalf, 0, 0)), "right", texture, G.blockSizeHalf, blockType
+        side2.Initialize SumTuple(middle, Array(-G.blockSizeHalf, 0, 0)), "left", texture, G.blockSizeHalf, blockType
+        side3.Initialize SumTuple(middle, Array(0, 0, G.blockSizeHalf)), "back", texture, G.blockSizeHalf, blockType
+        side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf)), "front", texture, G.blockSizeHalf, blockType
+        side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf, 0)), "up", texture, G.blockSizeHalf, blockType
+        side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf, 0)), "down", texture, G.blockSizeHalf, blockType
+    Else
+        side1.Initialize SumTuple(middle, Array(G.blockSizeHalf, 0, 0)), "right", texture, G.blockSizeHalf, blockType
+        side2.Initialize SumTuple(middle, Array(-G.blockSizeHalf, 0, 0)), "left", texture, G.blockSizeHalf, blockType
+        side3.Initialize SumTuple(middle, Array(0, 0, G.blockSizeHalf)), "back", texture, G.blockSizeHalf, blockType
+        side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf)), "front", texture, G.blockSizeHalf, blockType
+        side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf/2, 0)), "up", texture, G.blockSizeHalf, blockType
+        side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf/2, 0)), "down", texture, G.blockSizeHalf, blockType
+    End If
+    
     
     Set b.sides = New Collection
     b.sides.Add side1
@@ -161,9 +221,9 @@ Function LoadBlocks(blocks As Collection) As Collection
     Dim i As Long
 
     For i = 4 To 256
-        If ds.Cells(i, 7).Value <> "NONE" Then
-            Stats.Blocks = Stats.Blocks + 1
-            blocks.Add InitBlock(Array(ds.Cells(i, 8).Value, ds.Cells(i, 9).Value, ds.Cells(i, 10).Value), ds.Cells(i, 7).Value)
+        If ds.Cells(i, 7).value <> "NONE" and ds.Cells(i, 7).value <> "" Then
+            Stats.blocks = Stats.blocks + 1
+            blocks.Add InitBlock(Array(ds.Cells(i, 8).value, ds.Cells(i, 9).value, ds.Cells(i, 10).value), ds.Cells(i, 7).value)
         End If
     Next i
     
@@ -190,7 +250,7 @@ Function CalculateSides(allSquares2 As Collection) As Collection
     Dim currentBlockSidesPre As New Collection
     Dim currentBlockSides As Collection
     
-    Dim s As Side
+    Dim s As side
     For Each b In blocks
         Set currentBlockSidesPre = New Collection
         
@@ -229,26 +289,64 @@ Function CalculateSides(allSquares2 As Collection) As Collection
     Set CalculateSides = allSidesPre
 End Function
 
+
+Function CompareAngles(A As Variant, B As Variant) As Boolean
+    ' Calculate the angle between the origin (0, 0, 0) and point A
+    Dim angle_A As Double
+
+    If A(0) = 0 Or B(0) = 0 Then
+        If A(0) > B(0) Then
+        CompareAngles = True
+        Else
+            CompareAngles = False
+        End If
+    Else
+        angle_A = A(2) / A(0)
+        ' Calculate the angle between the origin (0, 0, 0) and point B
+        Dim angle_B As Double
+        angle_B = B(2) / B(0)
+
+        ' Compare the angles and return the result
+        If angle_A > angle_B Then
+            CompareAngles = True
+        Else
+            CompareAngles = False
+        End If
+    End If
+
+End Function
+
+
+
 ' [Apply textures to the Sides]
 Function ApplyTexture(allSidesPre As Collection) As Collection
     Dim allSquares As New Collection
     Dim sIndex As Variant
-    Dim s As Side
+    Dim s As side
     Dim x As Long
     Dim y As Long
     Dim bPixel As Pixel
     Dim cPixel As Pixel
     Dim dPixel As Pixel
-    Dim newPixel As New pixel
+    Dim newPixel As New Pixel
     Dim textureColor As Collection
-    
+    Dim blockType As String
+    Dim yIter As Long
+
     ' Applies textures to the Sides
     For Each sIndex In allSidesPre
         Stats.VisibleSides = Stats.VisibleSides + 1
         Set s = sIndex
         Set textureColor = T.GetColorCollection(s.texture)
+        blockType = T.GetBlockType(s.texture)
+        yIter = 3
+
+        If blockType = "block" Or s.orientation = "down" Or s.orientation = "up" Then
+            yIter = 7
+        End If
+
         For x = 0 To 7
-            For y = 0 To 7
+            For y = 0 To yIter
                 Dim col As Long
                 Dim ad As Variant
                 Dim ab As Variant
@@ -258,8 +356,19 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
                 Dim d3 As Variant
                 
                 ' Calculates the vector ad and ab of the Side
-                ad = Array((s.d(0) - s.a(0)) / 8, (s.d(1) - s.a(1)) / 8, (s.d(2) - s.a(2)) / 8)
-                ab = Array((s.b(0) - s.a(0)) / 8, (s.b(1) - s.a(1)) / 8, (s.b(2) - s.a(2)) / 8)
+                If blockType = "block" Then
+                    ad = Array((s.d(0) - s.a(0)) / 8, (s.d(1) - s.a(1)) / 8, (s.d(2) - s.a(2)) / 8)
+                    ab = Array((s.b(0) - s.a(0)) / 8, (s.b(1) - s.a(1)) / 8, (s.b(2) - s.a(2)) / 8)
+                Else
+                    If s.orientation = "down" Or s.orientation = "up" Then
+                        ad = Array((s.d(0) - s.a(0)) / 8, (s.d(1) - s.a(1)) / 8, (s.d(2) - s.a(2)) / 8)
+                        ab = Array((s.b(0) - s.a(0)) / 8, (s.b(1) - s.a(1)) / 8, (s.b(2) - s.a(2)) / 8)
+                    Else
+                        ad = Array((s.d(0) - s.a(0)) / 8, (s.d(1) - s.a(1)) / 4, (s.d(2) - s.a(2)) / 8)
+                        ab = Array((s.b(0) - s.a(0)) / 8, (s.b(1) - s.a(1)) / 4, (s.b(2) - s.a(2)) / 8)
+                    End If
+                End If
+                
                 
                 ' Calculates the corners of the current Pixel based on the vectors and current Pixel position
                 a3 = SumTuple(SumTuple(s.a, Array(ad(0) * x, ad(1) * x, ad(2) * x)), Array(ab(0) * y, ab(1) * y, ab(2) * y))
@@ -267,24 +376,43 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
                 c3 = SumTuple(SumTuple(s.a, Array(ad(0) * (x + 1), ad(1) * (x + 1), ad(2) * (x + 1))), Array(ab(0) * (y + 1), ab(1) * (y + 1), ab(2) * (y + 1)))
                 d3 = SumTuple(SumTuple(s.a, Array(ad(0) * (x + 1), ad(1) * (x + 1), ad(2) * (x + 1))), Array(ab(0) * (y), ab(1) * (y), ab(2) * (y)))
                 
+                
+                
                 ' Picks a pixel from the correct texture based on the orientation of the Side
-                If s.orientation = "up" Then
-                    col = textureColor(y+1+18)(8-x)
-                ElseIf s.orientation = "down" Then
-                    col = textureColor(y+1)(8-x)
-                Else
-                    ' Ensures that the texture will be drawn from the correct side (not mirrored)
-                    If a3(0) > d3(0) Then
-                        col = textureColor(y+1+9)(8-x)
+                If s.orientation = "down" Then
+                    col = textureColor(y + 1)(x+1+8)
+                ElseIf s.orientation = "up" Then
+                    col = textureColor(y + 1+8+8)(x+1+8)
+                ElseIf s.orientation = "left" Then
+                    If CompareAngles(a3, d3) = True Then
+                        col = textureColor(y + 1 + 8)(x+1)
                     Else
-                        col = textureColor(y+1+9)(x+1)
+                        col = textureColor(y + 1 + 8)(8-x)
+                    End If
+                ElseIf s.orientation = "front" Then
+                    If CompareAngles(a3, d3) = True Then
+                        col = textureColor(y + 1 + 8)(x+1+8)
+                    Else
+                        col = textureColor(y + 1 + 8)(8-x+8)
+                    End If
+                ElseIf s.orientation = "right" Then
+                   If CompareAngles(a3, d3) = True Then
+                        col = textureColor(y + 1 + 8)(x+1+8+8)
+                    Else
+                        col = textureColor(y + 1 + 8)(8-x+8+8)
+                    End If
+                ElseIf s.orientation = "back" Then
+                    If CompareAngles(a3, d3) = True Then
+                        col = textureColor(y + 1 + 8)(x+1+8+8+8)
+                    Else
+                        col = textureColor(y + 1 + 8)(8-x+8+8+8)
                     End If
                 End If
                 
                 ' Checks if the Pixel is inside the field of view and not behind the player
-                If IsPointInsideFOV(a3) = TRUE Or IsPointInsideFOV(b3) = TRUE Or IsPointInsideFOV(c3) = TRUE Or IsPointInsideFOV(d3) = TRUE Then
+                If IsPointInsideFOV(a3) = True Or IsPointInsideFOV(b3) = True Or IsPointInsideFOV(c3) = True Or IsPointInsideFOV(d3) = True Then
                     Stats.VisiblePixels = Stats.VisiblePixels + 1
-                    Set newPixel = New pixel
+                    Set newPixel = New Pixel
                     newPixel.Initialize a3, b3, c3, d3, col
                     allSquares.Add newPixel
                 End If
@@ -343,7 +471,7 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
         Next intersectionPoint
         
         ' Draws the Pixel on the screen if all 4 vertices are inside the field of view
-        If CountOffclips(squareVertexes) = 0 Then
+        If CountOffClips(squareVertexes) = 0 Then
             ' Gets the line of the Pixel
             For i = 1 To 4
                 startPoint = squareVertices2d(i)
@@ -351,10 +479,10 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
                 Call GetLinePixels(startPoint, endPoint, pixelsByY)
             Next i
             
-            ' Gets the minimum and maximum y value of the Pixel	
-            For Each vertices In squareVertices2d
+            ' Gets the minimum and maximum y value of the Pixel
+            For Each Vertices In squareVertices2d
                 Dim currentY As Long
-                currentY = vertices(1)
+                currentY = Vertices(1)
                 
                 If currentY < minY Then
                     minY = currentY
@@ -363,7 +491,7 @@ Function ConvertDraw2D(allSquares As Collection) As Collection
                 If currentY > maxY Then
                     maxY = currentY
                 End If
-            Next vertices
+            Next Vertices
             
             If minY <= 0 Then
                 minY = 1

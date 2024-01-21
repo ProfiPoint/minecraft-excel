@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Y_oldBlock"
+Attribute VB_Name = "Block"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -43,5 +43,6 @@ End Property
 Public Sub Initialize(P As Variant)
     point = P
 End Sub
+
 
 
