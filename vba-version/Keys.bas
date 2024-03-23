@@ -7,32 +7,36 @@ Sub BindKeys()
     Application.OnKey "+W", "MoveFront" ' z+ (if yaw is 0) generally x,z
     Application.OnKey "+S", "MoveBack" 'z- (if yaw is 0) generally x,z
 
-    Application.OnKey "+{ }", "MoveUp" 'y+
-    Application.OnKey "+X", "MoveDown" 'y-
+    Application.OnKey "+{ }", "MoveTop" 'y+
+    Application.OnKey "+X", "MoveBottom" 'y-
     
     Application.OnKey "+A", "MoveLeft" ' x- (if yaw is 0) generally x,z
     Application.OnKey "+D", "MoveRight" ' x+ (if yaw is 0) generally x,z
     
-    Application.OnKey "+R", "LookUp" ' x+ pitch
-    Application.OnKey "+F", "LookDown" ' x- pitch
+    Application.OnKey "+R", "LookTop" ' x+ pitch
+    Application.OnKey "+F", "LookBottom" ' x- pitch
     
     Application.OnKey "+Q", "LookLeft" ' y- yaw
     Application.OnKey "+E", "LookRight" 'y+ yaw
 End Sub
 
-Sub MoveUp()
+Sub MoveTop()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.y = P.y + G.moveBy
+
     Move
 End Sub
 
-Sub MoveDown()
+Sub MoveBottom()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.y = P.y - G.moveBy
+
     Move
 End Sub
 
@@ -40,13 +44,10 @@ Sub MoveRight()
     If Not HasBeenInitialized = True Then
         Init
     End If
-    Dim dx As Long
-    Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * G.moveBy)
-    dz = CInt(C.cos(P.yaw) * G.moveBy)
     
-    P.x = P.x + dz
-    P.z = P.z - dx
+    P.x = P.x + CInt(c.cos(P.yaw) * G.moveBy)
+    P.z = P.z - CInt(c.sin(P.yaw) * G.moveBy)
+
     Move
 End Sub
 
@@ -54,13 +55,10 @@ Sub MoveLeft()
     If Not HasBeenInitialized = True Then
         Init
     End If
-    Dim dx As Long
-    Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * G.moveBy)
-    dz = CInt(C.cos(P.yaw) * G.moveBy)
-    
-    P.x = P.x - dz
-    P.z = P.z + dx
+
+    P.x = P.x - CInt(c.cos(P.yaw) * G.moveBy)
+    P.z = P.z + CInt(c.sin(P.yaw) * G.moveBy)
+
     Move
 End Sub
 
@@ -68,13 +66,10 @@ Sub MoveFront()
     If Not HasBeenInitialized = True Then
         Init
     End If
-    Dim dx As Long
-    Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * G.moveBy)
-    dz = CInt(C.cos(P.yaw) * G.moveBy)
-    
-    P.x = P.x + dx
-    P.z = P.z + dz
+
+    P.x = P.x + CInt(c.sin(P.yaw) * G.moveBy)
+    P.z = P.z + CInt(c.cos(P.yaw) * G.moveBy)
+
     Move
 End Sub
 
@@ -82,38 +77,38 @@ Sub MoveBack()
     If Not HasBeenInitialized = True Then
         Init
     End If
-    If Not HasBeenInitialized = True Then
-        Init
-    End If
-    Dim dx As Long
-    Dim dz As Long
-    dx = CInt(C.sin(P.yaw) * G.moveBy)
-    dz = CInt(C.cos(P.yaw) * G.moveBy)
-    
-    P.x = P.x - dx
-    P.z = P.z - dz
+
+    P.x = P.x - CInt(c.sin(P.yaw) * G.moveBy)
+    P.z = P.z - CInt(c.cos(P.yaw) * G.moveBy)
+
     Move
 End Sub
 
-Sub LookUp()
+Sub LookTop()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.pitch = P.pitch + G.rotateBy
+
     If P.pitch > 90 Then
         P.pitch = 90
     End If
+
     Move
 End Sub
 
-Sub LookDown()
+Sub LookBottom()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.pitch = P.pitch - G.rotateBy
+
     If P.pitch < -90 Then
         P.pitch = -90
     End If
+
     Move
 End Sub
 
@@ -121,10 +116,13 @@ Sub LookLeft()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.yaw = P.yaw - G.rotateBy
+
     If P.yaw < 0 Then
         P.yaw = P.yaw + 360
     End If
+
     Move
 End Sub
 
@@ -132,10 +130,13 @@ Sub LookRight()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     P.yaw = P.yaw + G.rotateBy
+
     If P.yaw >= 360 Then
         P.yaw = P.yaw - 360
     End If
+    
     Move
 End Sub
 

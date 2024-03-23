@@ -1,11 +1,11 @@
 Attribute VB_Name = "Functions"
 Option Explicit
 
-' [Optimalization function - delete duplicate sides in the same middle]
-' Creates a disctionary with middle points as keys and sides as values and then converts it back to a collection
+' [Optimalization function - Removes sides that are overlapping - because there are not visible to a player]
 Sub RemoveDuplicateSides(allSidesPre As Collection)
     Dim sideDict As Object
     Set sideDict = CreateObject("Scripting.Dictionary")
+    Dim savedMiddlePoints As New Collection
     
     Dim side As side
     For Each side In allSidesPre
@@ -15,8 +15,8 @@ Sub RemoveDuplicateSides(allSidesPre As Collection)
         ' If the middlePoint is already in the dictionary, overwrite the existing entry
         If sideDict.Exists(middlePointKey) Then
             Set sideDict(middlePointKey) = side
+            savedMiddlePoints.Add middlePointKey
         Else
-            ' Otherwise, add the side to the dictionary
             sideDict.Add middlePointKey, side
         End If
     Next side
@@ -24,12 +24,28 @@ Sub RemoveDuplicateSides(allSidesPre As Collection)
     ' Clear the original collection
     Set allSidesPre = New Collection
     
-    ' Convert the dictionary back to the collection
+    ' Convert the dictionary back to the collection with only unique sides
     Dim key As Variant
     For Each key In sideDict.Keys
-        allSidesPre.Add sideDict(key)
+        If Not IsInCollection(savedMiddlePoints, key) Then
+            allSidesPre.Add sideDict(key)
+        End If
     Next key
 End Sub
+
+' [Checks if an item is already in a collection]
+Function IsInCollection(col As Collection, item As Variant) As Boolean
+    Dim colItem As Variant
+
+    For Each colItem In col
+        If StrComp(CStr(colItem), CStr(item), vbTextCompare) = 0 Then
+            IsInCollection = True
+            Exit Function
+        End If
+    Next colItem
+    
+    IsInCollection = False
+End Function
 
 ' [Returns reversed collection]
 Function ReverseCollection(originalCollection As Collection) As Collection

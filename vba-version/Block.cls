@@ -13,6 +13,7 @@ Private distance_ As Double
 Private point_ As Variant
 Private sides_ As Collection
 
+' [get; set properties for variables]
 Public Property Get distance() As Double
     distance = distance_
 End Property
@@ -40,6 +41,7 @@ Public Property Set sides(value As Collection)
     Set sides_ = value
 End Property
 
+' [Initialize method]
 Public Sub Initialize(P As Variant)
     point = P
 End Sub

@@ -5,10 +5,13 @@ Option Explicit
 Function SumTuple(t1 As Variant, t2 As Variant) As Variant
     Dim i As Long
     Dim result() As Double
+
     ReDim result(LBound(t1) To UBound(t1))
+
     For i = LBound(t1) To UBound(t1)
         result(i) = t1(i) + t2(i)
     Next i
+
     SumTuple = result
 End Function
 
@@ -29,14 +32,14 @@ Function CalculateCoordinates(point As Variant) As Variant
     translatedVertex(2) = point(2) - P.z
     
     ' Rotate the point around the player's yaw
-    rotatedVertexYaw(0) = translatedVertex(0) * C.cos(P.yaw) - translatedVertex(2) * C.sin(P.yaw)
+    rotatedVertexYaw(0) = translatedVertex(0) * c.cos(P.yaw) - translatedVertex(2) * c.sin(P.yaw)
     rotatedVertexYaw(1) = translatedVertex(1)
-    rotatedVertexYaw(2) = translatedVertex(0) * C.sin(P.yaw) + translatedVertex(2) * C.cos(P.yaw)
+    rotatedVertexYaw(2) = translatedVertex(0) * c.sin(P.yaw) + translatedVertex(2) * c.cos(P.yaw)
     
     ' Rotate the point around the player's pitch
     rotatedVertexPitch(0) = rotatedVertexYaw(0)
-    rotatedVertexPitch(1) = rotatedVertexYaw(1) * C.cos(P.pitch) - rotatedVertexYaw(2) * C.sin(P.pitch)
-    rotatedVertexPitch(2) = rotatedVertexYaw(1) * C.sin(P.pitch) + rotatedVertexYaw(2) * C.cos(P.pitch)
+    rotatedVertexPitch(1) = rotatedVertexYaw(1) * c.cos(P.pitch) - rotatedVertexYaw(2) * c.sin(P.pitch)
+    rotatedVertexPitch(2) = rotatedVertexYaw(1) * c.sin(P.pitch) + rotatedVertexYaw(2) * c.cos(P.pitch)
     
     CalculateCoordinates = rotatedVertexPitch
 End Function
@@ -68,6 +71,7 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     
     Dim result As Boolean
     result = False
+
     ' Check if the point is behind the player
     If point(2) <= 0 Then
         IsPointInsideFOV = result
@@ -76,9 +80,7 @@ Function IsPointInsideFOV(point As Variant) As Boolean
 
     ' Calculate radius of the circle on the xy-plane assuming FOV = 90 degrees
     Dim radius As Double
-    radius = C.tan(90 / 2) * point(2)
-    
-    
+    radius = c.tan(90 / 2) * point(2)
     
     ' Check if the point is inside the pyramid (frustum)
     Dim distanceToOrigin As Double
@@ -93,6 +95,31 @@ Function IsPointInsideFOV(point As Variant) As Boolean
     End If
     
     IsPointInsideFOV = result
+End Function
+
+Function CompareAngles(A As Variant, B As Variant) As Boolean
+    ' Calculate the angle between the origin (0, 0, 0) and point A
+    Dim angle_A As Double
+
+    If A(0) = 0 Or B(0) = 0 Then
+        If A(0) > B(0) Then
+        CompareAngles = True
+        Else
+            CompareAngles = False
+        End If
+    Else
+        angle_A = A(2) / A(0)
+        ' Calculate the angle between the origin (0, 0, 0) and point B
+        Dim angle_B As Double
+        angle_B = B(2) / B(0)
+
+        ' Compare the angles and return the result
+        If angle_A > angle_B Then
+            CompareAngles = True
+        Else
+            CompareAngles = False
+        End If
+    End If
 End Function
 
 ' [Optimalization function - Creates dictionary of column (x) pixels indexed by the row (y) to speed up pixel drawing]
@@ -127,20 +154,25 @@ Sub GetLinePixels(startPt As Variant, endPt As Variant, pixelsByY As Object)
             pixelsByY(y0).Add "Min", 2147483647 ' Initialize with minimum possible value
             pixelsByY(y0).Add "Max", -2147483647 ' Initialize with maximum possible value
         End If
+
         If y0 > 0 Then
             If x0 < pixelsByY(y0)("Min") Then
                 pixelsByY(y0)("Min") = x0
             End If
-            If x0 > pixelsByY(y0)("Max") Then
+            
+            If x0 > pixelsByY(y0)("Max") Then ' Not ElseIf because x0 can be equal to both Min and Max
                 pixelsByY(y0)("Max") = x0
             End If
         End If
+
         e2 = 2 * err
+
         If e2 > -dy Then
             err = err - dy
             x0 = x0 + sx
         End If
-        If e2 < dx Then
+
+        If e2 < dx Then ' Not ElseIf because e2 can be equal to dx
             err = err + dx
             y0 = y0 + sy
         End If

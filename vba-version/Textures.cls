@@ -1,9 +1,20 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Textures"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
 Option Explicit
 
 Private colorCollections As Collection
+Private opacityCollections As Collection
 Private blockTypeCollections As Collection
 Private Type_ As String
 
+' [get; set properties for variables]
 Public Property Get textureType() As String
     textureType = Type_
 End Property
@@ -12,13 +23,19 @@ Public Property Let textureType(value As String)
     Type_ = value
 End Property
 
+' [Loads the given range of cells from sheet Textures]
 Public Sub LoadInput(textureName As String, blockType As String, inputRange As Range)
     Dim c As Long, r As Long
     Dim innerCollection As Collection
-    
+    Dim innerCollection2 As Collection
+
     ' Check if the colorCollections collection is initialized
     If colorCollections Is Nothing Then
         Set colorCollections = New Collection
+    End If
+
+    If opacityCollections Is Nothing Then
+        Set opacityCollections = New Collection
     End If
 
     If blockTypeCollections Is Nothing Then
@@ -35,85 +52,70 @@ Public Sub LoadInput(textureName As String, blockType As String, inputRange As R
         Dim newCollection2 As New Collection
         blockTypeCollections.Add newCollection2, key:=textureName
     End If
+
+    If Not OpacityCollectionsExists(textureName) Then
+        Dim newCollection3 As New Collection
+        opacityCollections.Add newCollection3, key:=textureName
+    End If
     
     blockTypeCollections(textureName).Add blockType
 
     ' Store colors in the Collection of Collection associated with the textureName
     Set innerCollection = New Collection
+    Set innerCollection2 = New Collection
+    Dim cellText As Variant
     For r = 1 To 24
         Set innerCollection = New Collection
+        Set innerCollection2 = New Collection
         For c = 1 To 32
             ' Store color in inner collection
-            innerCollection.Add inputRange.Cells(25 - r, c).Interior.color
+            innerCollection.Add inputRange.Cells(25 - r, c).Interior.Color
+            
+            ' Check if the text is empty, add 1 instead of 0
+            If inputRange.Cells(25 - r, c).Text = "" Then
+                cellText = Val(100)
+            Else
+                cellText = Val(inputRange.Cells(25 - r, c).Text*100)
+            End If
+
+            innerCollection2.Add cellText
         Next c
         ' Store inner collection in the main collection associated with the textureName
         colorCollections(textureName).Add innerCollection
+        opacityCollections(textureName).Add innerCollection2
     Next r
 End Sub
 
+' [Functions ready to be called from the Main module]
 Public Function GetColorCollection(textureName As String) As Collection
-    ' Return the stored color collection associated with the textureName
     Set GetColorCollection = colorCollections(textureName)
 End Function
 
 Public Function GetBlockType(textureName As String) As String
-    ' Return the stored color collection associated with the textureName
     GetBlockType = blockTypeCollections(textureName)(1)
 End Function
 
-Public Sub SaveTexturesToTxt()
-    ' Save textures to a text file (C:/Users/profpoint/result.txt)
-    Dim filePath As String
-    Dim fileNumber As Integer
-    Dim textureName As Variant
-    
-    ' Set the file path
-    filePath = "C:/Users/profpoint/result.txt"
-    
-    ' Open the file for writing
-    fileNumber = FreeFile
-    Open filePath For Output As fileNumber
-    
-    ' Loop through each textureName in colorCollections
-    For Each textureName In colorCollections.Keys
-        ' Write texture information to the file
-        Print #fileNumber, textureName & "," & blockTypeCollections(textureName)(1) & "," & GetHexColors(textureName)
-    Next textureName
-    
-    ' Close the file
-    Close fileNumber
-End Sub
-
-Private Function GetHexColors(textureName As String) As String
-    ' Convert colors to hex and concatenate them
-    Dim hexColors As String
-    Dim innerCollection As Collection
-    Dim color As Variant
-    
-    Set innerCollection = colorCollections(textureName)
-    
-    For Each color In innerCollection
-        hexColors = hexColors & "," & RGBToHex(color)
-    Next color
-    
-    GetHexColors = Mid(hexColors, 2) ' Remove the leading comma
+Public Function GetOpacity(textureName As String) As Collection
+    Set GetOpacity = opacityCollections(textureName)
 End Function
 
-Private Function RGBToHex(rgbColor As Long) As String
-    ' Convert RGB color to hex
-    RGBToHex = Right("000000" & Hex(rgbColor), 6)
-End Function
-
+' [Preventing creating a new collection if the key already exists]
 Private Function CollectionExists(key As Variant) As Boolean
-    ' Check if the collection with the specified key exists
     On Error Resume Next
     CollectionExists = Not colorCollections(key) Is Nothing
     On Error GoTo 0
 End Function
 
 Private Function BlockCollectionExists(key As Variant) As Boolean
-    ' Check if the collection with the specified key exists
     On Error Resume Next
     BlockCollectionExists = Not blockTypeCollections(key) Is Nothing
     On Error GoTo 0
 End Function
+
+Private Function OpacityCollectionsExists(key As Variant) As Boolean
+    On Error Resume Next
+    OpacityCollectionsExists = Not opacityCollections(key) Is Nothing
+    On Error GoTo 0
+End Function
+
+

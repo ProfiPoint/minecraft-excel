@@ -18,6 +18,7 @@ Private b_ As Variant
 Private c_ As Variant
 Private d_ As Variant
 
+' [get; set properties for variables]
 Public Property Get distance() As Double
     distance = distance_
 End Property
@@ -50,27 +51,27 @@ Public Property Let orientation(value As String)
     orientation_ = value
 End Property
 
-Public Property Get a() As Variant
-    a = a_
+Public Property Get A() As Variant
+    A = a_
 End Property
 
-Public Property Let a(value As Variant)
+Public Property Let A(value As Variant)
     a_ = value
 End Property
 
-Public Property Get b() As Variant
-    b = b_
+Public Property Get B() As Variant
+    B = b_
 End Property
 
-Public Property Let b(value As Variant)
+Public Property Let B(value As Variant)
     b_ = value
 End Property
 
-Public Property Get C() As Variant
+Public Property Get c() As Variant
     c = c_
 End Property
 
-Public Property Let C(value As Variant)
+Public Property Let c(value As Variant)
     c_ = value
 End Property
 
@@ -83,57 +84,59 @@ Public Property Let d(value As Variant)
 End Property
 
 
-
+' [Initialize the class from middle of the side, orientation, texture and block size and sets all 4 points of the side]
 Public Sub Initialize(point As Variant, o As String, tex As String, blockSizeHalf As Double, blockType As String)
     middlePoint = point
     orientation = o
     texture = tex
 
+    ' opposite sides will have different order of A, B, C, D points; this is fixed in CompareAngles Function
     If blockType = "block" Then
         If o = "right" Or o = "left" Then
-            a = SumTuple(middlePoint, Array(0, -blockSizeHalf, -blockSizeHalf))
-            b = SumTuple(middlePoint, Array(0, blockSizeHalf, -blockSizeHalf))
+            A = SumTuple(middlePoint, Array(0, -blockSizeHalf, -blockSizeHalf))
+            B = SumTuple(middlePoint, Array(0, blockSizeHalf, -blockSizeHalf))
             d = SumTuple(middlePoint, Array(0, -blockSizeHalf, blockSizeHalf))
-            C = SumTuple(middlePoint, Array(0, blockSizeHalf, blockSizeHalf))
+            c = SumTuple(middlePoint, Array(0, blockSizeHalf, blockSizeHalf))
                 
         ElseIf o = "front" Or o = "back" Then
-            a = SumTuple(middlePoint, Array(-blockSizeHalf, -blockSizeHalf, 0))
-            b = SumTuple(middlePoint, Array(-blockSizeHalf, blockSizeHalf, 0))
+            A = SumTuple(middlePoint, Array(-blockSizeHalf, -blockSizeHalf, 0))
+            B = SumTuple(middlePoint, Array(-blockSizeHalf, blockSizeHalf, 0))
             d = SumTuple(middlePoint, Array(blockSizeHalf, -blockSizeHalf, 0))
-            C = SumTuple(middlePoint, Array(blockSizeHalf, blockSizeHalf, 0))
+            c = SumTuple(middlePoint, Array(blockSizeHalf, blockSizeHalf, 0))
             
-        ElseIf o = "up" Or o = "down" Then
-            a = SumTuple(middlePoint, Array(-blockSizeHalf, 0, -blockSizeHalf))
-            b = SumTuple(middlePoint, Array(-blockSizeHalf, 0, blockSizeHalf))
+        ElseIf o = "top" Or o = "bottom" Then
+            A = SumTuple(middlePoint, Array(-blockSizeHalf, 0, -blockSizeHalf))
+            B = SumTuple(middlePoint, Array(-blockSizeHalf, 0, blockSizeHalf))
             d = SumTuple(middlePoint, Array(blockSizeHalf, 0, -blockSizeHalf))
-            C = SumTuple(middlePoint, Array(blockSizeHalf, 0, blockSizeHalf))
+            c = SumTuple(middlePoint, Array(blockSizeHalf, 0, blockSizeHalf))
         End If
-    
+
     ElseIf blockType = "slab" Then
         If o = "right" Or o = "left" Then
-            a = SumTuple(middlePoint, Array(0, -blockSizeHalf/2, -blockSizeHalf))
-            b = SumTuple(middlePoint, Array(0, blockSizeHalf/2, -blockSizeHalf))
-            d = SumTuple(middlePoint, Array(0, -blockSizeHalf/2, blockSizeHalf))
-            C = SumTuple(middlePoint, Array(0, blockSizeHalf/2, blockSizeHalf))
+            A = SumTuple(middlePoint, Array(0, -blockSizeHalf / 2, -blockSizeHalf))
+            B = SumTuple(middlePoint, Array(0, blockSizeHalf / 2, -blockSizeHalf))
+            d = SumTuple(middlePoint, Array(0, -blockSizeHalf / 2, blockSizeHalf))
+            c = SumTuple(middlePoint, Array(0, blockSizeHalf / 2, blockSizeHalf))
                 
         ElseIf o = "front" Or o = "back" Then
-            a = SumTuple(middlePoint, Array(-blockSizeHalf, -blockSizeHalf/2, 0))
-            b = SumTuple(middlePoint, Array(-blockSizeHalf, blockSizeHalf/2, 0))
-            d = SumTuple(middlePoint, Array(blockSizeHalf, -blockSizeHalf/2, 0))
-            C = SumTuple(middlePoint, Array(blockSizeHalf, blockSizeHalf/2, 0))
+            A = SumTuple(middlePoint, Array(-blockSizeHalf, -blockSizeHalf / 2, 0))
+            B = SumTuple(middlePoint, Array(-blockSizeHalf, blockSizeHalf / 2, 0))
+            d = SumTuple(middlePoint, Array(blockSizeHalf, -blockSizeHalf / 2, 0))
+            c = SumTuple(middlePoint, Array(blockSizeHalf, blockSizeHalf / 2, 0))
             
-        ElseIf o = "up" Or o = "down" Then
-            a = SumTuple(middlePoint, Array(-blockSizeHalf, 0, -blockSizeHalf))
-            b = SumTuple(middlePoint, Array(-blockSizeHalf, 0, blockSizeHalf))
+        ElseIf o = "top" Or o = "bottom" Then
+            A = SumTuple(middlePoint, Array(-blockSizeHalf, 0, -blockSizeHalf))
+            B = SumTuple(middlePoint, Array(-blockSizeHalf, 0, blockSizeHalf))
             d = SumTuple(middlePoint, Array(blockSizeHalf, 0, -blockSizeHalf))
-            C = SumTuple(middlePoint, Array(blockSizeHalf, 0, blockSizeHalf))
+            c = SumTuple(middlePoint, Array(blockSizeHalf, 0, blockSizeHalf))
         End If
     End If
 
-    
 End Sub
 
+' function to sum two tuples
 Private Function SumTuple(v1 As Variant, v2 As Variant) As Variant
     SumTuple = Array(v1(0) + v2(0), v1(1) + v2(1), v1(2) + v2(2))
 End Function
+
 

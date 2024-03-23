@@ -15,6 +15,7 @@ Private VisibleSides_ As Long
 Private Cells_ As Long
 Private RowsDrawn_ As Long
 
+' [get; set properties for variables]
 Public Property Get blocks() As Long
     blocks = Blocks_
 End Property

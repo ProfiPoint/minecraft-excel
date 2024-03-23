@@ -10,11 +10,13 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private color_ As Long
+Private opacity_ As Long
 Private a3_ As Variant
 Private b3_ As Variant
 Private c3_ As Variant
 Private d3_ As Variant
 
+' [get; set properties for variables]
 Public Property Get color() As Long
     color = color_
 End Property
@@ -55,10 +57,20 @@ Public Property Let d3(value As Variant)
     d3_ = value
 End Property
 
-Public Sub Initialize(a As Variant, b As Variant, C As Variant, d As Variant, col As Long)
+Public Property Get opacity() As Double
+    opacity = opacity_
+End Property
+
+Public Property Let opacity(value As Double)
+    opacity_ = value
+End Property
+
+' [Initialize method]
+Public Sub Initialize(A As Variant, B As Variant, c As Variant, d As Variant, col As Long, trans As Double)
     color = col
-    a3 = a
-    b3 = b
-    c3 = C
+    a3 = A
+    b3 = B
+    c3 = c
     d3 = d
+    opacity = trans
 End Sub

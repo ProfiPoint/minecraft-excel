@@ -18,6 +18,7 @@ Private rotateBy_ As Long
 Private instantDrawing_ As Boolean
 Private valuesSet_ As Boolean
 
+' [get; set properties for variables]
 Public Property Get screenWidth() As Long
     screenWidth = screenWidth_
 End Property
