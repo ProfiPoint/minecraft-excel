@@ -44,7 +44,7 @@ Please note that this project is designed to work with specific versions of Micr
 Follow these steps to install the Minecraft-Excel 3D Renderer:
 
 1. **Download Minecraft.xlsm:**
-   - Download the [`Minecraft.xlsm`](https://github.com/ProfiPoint/minecraft-excel/blob/main/Minecraft.xlsm) file from the project repository.
+   - Download the [`CubesRendering.xlsm`](https://github.com/ProfiPoint/minecraft-excel/blob/main/CubesRendering.xlsm) file from the project repository.
 
 2. **Open File Properties:**
    - Right-click on the downloaded file.
@@ -56,7 +56,7 @@ Follow these steps to install the Minecraft-Excel 3D Renderer:
    - Click "OK" to confirm.
 
 4. **Open File in Excel:**
-   - Double-click on the [`Minecraft.xlsm`](https://github.com/ProfiPoint/minecraft-excel/blob/main/Minecraft.xlsm)  file to open it in Microsoft Excel.
+   - Double-click on the [`CubesRendering.xlsm`](https://github.com/ProfiPoint/minecraft-excel/blob/main/CubesRendering.xlsm)  file to open it in Microsoft Excel.
 
 5. **Access Excel Options:**
    - Go to the "File" tab in Excel.
