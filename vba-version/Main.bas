@@ -173,13 +173,6 @@ Function InitBlock(middle As Variant, texture As String) As Block
         side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf)), "front", texture, G.blockSizeHalf, blockType
         side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf / 2, 0)), "top", texture, G.blockSizeHalf, blockType
         side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf / 2, 0)), "bottom", texture, G.blockSizeHalf, blockType
-    ElseIf blockType = "fence" Then
-        side1.Initialize SumTuple(middle, Array(G.blockSizeHalf/4, 0, 0)), "right", texture, G.blockSizeHalf, blockType
-        side2.Initialize SumTuple(middle, Array(-G.blockSizeHalf/4, 0, 0)), "left", texture, G.blockSizeHalf, blockType
-        side3.Initialize SumTuple(middle, Array(0, 0, G.blockSizeHalf/4)), "back", texture, G.blockSizeHalf, blockType
-        side4.Initialize SumTuple(middle, Array(0, 0, -G.blockSizeHalf/4)), "front", texture, G.blockSizeHalf, blockType
-        side5.Initialize SumTuple(middle, Array(0, G.blockSizeHalf, 0)), "top", texture, G.blockSizeHalf, blockType
-        side6.Initialize SumTuple(middle, Array(0, -G.blockSizeHalf, 0)), "bottom", texture, G.blockSizeHalf, blockType
     End If
     
     
