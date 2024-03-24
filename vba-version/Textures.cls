@@ -69,13 +69,25 @@ Public Sub LoadInput(textureName As String, blockType As String, inputRange As R
         Set innerCollection2 = New Collection
         For c = 1 To 32
             ' Store color in inner collection
-            innerCollection.Add inputRange.Cells(25 - r, c).Interior.Color
+            innerCollection.Add inputRange.Cells(25 - r, c).Interior.color
             
             ' Check if the text is empty, add 1 instead of 0
             If inputRange.Cells(25 - r, c).Text = "" Then
                 cellText = Val(100)
             Else
-                cellText = Val(inputRange.Cells(25 - r, c).Text*100)
+                cellText = Replace(inputRange.Cells(25 - r, c).Text, ",", ".")
+                Dim periodPosition As Integer
+                periodPosition = InStr(cellText, ".")
+                
+                ' Convert the text to a decimal number
+                If periodPosition > 0 Then
+                    cellText = Replace(cellText, ".", "")
+                    cellText = "0" & cellText
+                Else
+                    cellText = cellText & "00"
+                End If
+                cellText = CInt(cellText)
+                cellText = cellText * 100
             End If
 
             innerCollection2.Add cellText
