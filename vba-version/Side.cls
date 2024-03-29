@@ -13,6 +13,7 @@ Private distance_ As Double
 Private texture_ As String
 Private middlePoint_ As Variant
 Private orientation_ As String
+Private notVisible_ As Boolean
 Private a_ As Variant
 Private b_ As Variant
 Private c_ As Variant
@@ -49,6 +50,14 @@ End Property
 
 Public Property Let orientation(value As String)
     orientation_ = value
+End Property
+
+Public Property Get notVisible() As Boolean
+    notVisible = notVisible_
+End Property
+
+Public Property Let notVisible(value As Boolean)
+    notVisible_ = value
 End Property
 
 Public Property Get A() As Variant
@@ -89,6 +98,7 @@ Public Sub Initialize(point As Variant, o As String, tex As String, blockSizeHal
     middlePoint = point
     orientation = o
     texture = tex
+    notVisible = False
 
     ' opposite sides will have different order of A, B, C, D points; this is fixed in CompareAngles Function
     If blockType = "block" Then

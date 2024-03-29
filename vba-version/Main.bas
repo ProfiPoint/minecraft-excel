@@ -27,13 +27,12 @@ Sub Init()
     Set ms = ThisWorkbook.Sheets("Minecraft")
     Set ts = ThisWorkbook.Sheets("Textures")
     Set ds = ThisWorkbook.Sheets("Data")
-    
+    G.containsGlass = False
     ' Sets the sheets
     Call InsertCurrentTime("Data!E12") ' (stats) time log
 
     HasBeenInitialized = True
     CheckDefaultValues
-
 
     ' Applies player settings
     P.x = CInt(ds.Range("B4").value)
@@ -99,6 +98,7 @@ Sub Move()
     If Not HasBeenInitialized = True Then
         Init
     End If
+
     ' Resets stats values
     Stats.blocks = 0
     Stats.VisibleSides = 0
@@ -107,6 +107,7 @@ Sub Move()
     Stats.RowsDrawn = 0
     
     ds.Range("E19").value = "calculating..." ' (stats) status log
+
     Call InsertCurrentTime("Data!E14") ' (stats) time log
     
     If G.instantDrawing = True Then
@@ -194,6 +195,9 @@ Function LoadBlocks(blocks As Collection) As Collection
         If ds.Cells(i, 7).value <> "NONE" And ds.Cells(i, 7).value <> "" Then
             Stats.blocks = Stats.blocks + 1
             blocks.Add InitBlock(Array(ds.Cells(i, 8).value, ds.Cells(i, 9).value, ds.Cells(i, 10).value), ds.Cells(i, 7).value)
+            If ds.Cells(i, 7).value = "glass" Then
+                G.containsGlass = True
+            End If
         End If
     Next i
     
@@ -206,7 +210,6 @@ Function CalculateSides(allSquares2 As Collection) As Collection
     Set blocks = New Collection
     Set blocks = LoadBlocks(blocks)
     Dim allSidesPre As New Collection
-    
     
     Dim B As Block
     For Each B In blocks
@@ -240,14 +243,19 @@ Function CalculateSides(allSquares2 As Collection) As Collection
         Set currentBlockSides = SortByDistance(currentBlockSidesPre)
         Set currentBlockSides = ReverseCollection(currentBlockSides)
         
-        ' Optimizing the number of Sides to be drawn if the player is near the block, because only 3 sides can be visible at once
-        If B.distance <= G.blockSize * Sqr(3) Then
+        ' Optimizing the number of Sides to be drawn if the player is near the block
+        ' If game contains glass, all sides are drawn because glass is transparent and it would cause visual bugs otherwise
+        If B.distance <= G.blockSize * Sqr(3) Or G.containsGlass = True Then
             For i = 1 To 6
                 allSidesPre.Add currentBlockSides(i)
             Next i
         Else
-            For i = 1 To 3
+            For i = 1 To 3 ' 3 original
                 allSidesPre.Add currentBlockSides(i)
+            Next i
+            For i = 4 To 6 ' 3 original
+                allSidesPre.Add currentBlockSides(i)
+                currentBlockSides(i).notVisible = True
             Next i
         End If
     Next B
@@ -285,117 +293,119 @@ Function ApplyTexture(allSidesPre As Collection) As Collection
 
     ' Applies textures to the Sides
     For Each sIndex In allSidesPre
-        Stats.VisibleSides = Stats.VisibleSides + 1
+        If sIndex.notVisible = False Then
+            
+            Stats.VisibleSides = Stats.VisibleSides + 1
 
-        Set s = sIndex
-        Set textureColor = T.GetColorCollection(s.texture)
-        Set sideOpacity = T.GetOpacity(s.texture)
-        blockType = T.GetBlockType(s.texture)
-        xCoef = 0
-        yCoef = 0
+            Set s = sIndex
+            Set textureColor = T.GetColorCollection(s.texture)
+            Set sideOpacity = T.GetOpacity(s.texture)
+            blockType = T.GetBlockType(s.texture)
+            xCoef = 0
+            yCoef = 0
 
-        If blockType = "block"Then
-            yIter = 8
-        ElseIf blockType = "slab" And (s.orientation = "bottom" Or s.orientation = "top") Then
-            yIter = 8
-        ElseIf blockType = "slab" Then
-            yIter = 4
-        End If
+            If blockType = "block"Then
+                yIter = 8
+            ElseIf blockType = "slab" And (s.orientation = "bottom" Or s.orientation = "top") Then
+                yIter = 8
+            ElseIf blockType = "slab" Then
+                yIter = 4
+            End If
 
-        If blockType = "block" Then
-            xIter = 8
-        ElseIf blockType = "slab" Then
-            xIter = 8
-        End If
+            If blockType = "block" Then
+                xIter = 8
+            ElseIf blockType = "slab" Then
+                xIter = 8
+            End If
 
-        For x = 0 To xIter-1
-            For y = 0 To yIter-1
-                Dim col As Long
-                Dim trans As Double
-                Dim ad As Variant
-                Dim ab As Variant
-                Dim a3 As Variant
-                Dim b3 As Variant
-                Dim c3 As Variant
-                Dim d3 As Variant
-                
-                ' Calculates the vector ad and ab of the Side
-                If blockType = "block" Then
-                    ad = Array((s.d(0) - s.A(0)) / 8, (s.d(1) - s.A(1)) / 8, (s.d(2) - s.A(2)) / 8)
-                    ab = Array((s.B(0) - s.A(0)) / 8, (s.B(1) - s.A(1)) / 8, (s.B(2) - s.A(2)) / 8)
-                ElseIf blockType = "slab" Then
-                    If s.orientation = "bottom" Or s.orientation = "top" Then
+            For x = 0 To xIter-1
+                For y = 0 To yIter-1
+                    Dim col As Long
+                    Dim trans As Double
+                    Dim ad As Variant
+                    Dim ab As Variant
+                    Dim a3 As Variant
+                    Dim b3 As Variant
+                    Dim c3 As Variant
+                    Dim d3 As Variant
+                    
+                    ' Calculates the vector ad and ab of the Side
+                    If blockType = "block" Then
                         ad = Array((s.d(0) - s.A(0)) / 8, (s.d(1) - s.A(1)) / 8, (s.d(2) - s.A(2)) / 8)
                         ab = Array((s.B(0) - s.A(0)) / 8, (s.B(1) - s.A(1)) / 8, (s.B(2) - s.A(2)) / 8)
-                    Else
-                        ad = Array((s.d(0) - s.A(0)) / 8, (s.d(1) - s.A(1)) / 4, (s.d(2) - s.A(2)) / 8)
-                        ab = Array((s.B(0) - s.A(0)) / 8, (s.B(1) - s.A(1)) / 4, (s.B(2) - s.A(2)) / 8)
+                    ElseIf blockType = "slab" Then
+                        If s.orientation = "bottom" Or s.orientation = "top" Then
+                            ad = Array((s.d(0) - s.A(0)) / 8, (s.d(1) - s.A(1)) / 8, (s.d(2) - s.A(2)) / 8)
+                            ab = Array((s.B(0) - s.A(0)) / 8, (s.B(1) - s.A(1)) / 8, (s.B(2) - s.A(2)) / 8)
+                        Else
+                            ad = Array((s.d(0) - s.A(0)) / 8, (s.d(1) - s.A(1)) / 4, (s.d(2) - s.A(2)) / 8)
+                            ab = Array((s.B(0) - s.A(0)) / 8, (s.B(1) - s.A(1)) / 4, (s.B(2) - s.A(2)) / 8)
+                        End If
                     End If
-                End If
-                
-                ' Calculates the corners of the current Pixel based on the vectors and current Pixel position
-                a3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef), ad(1) * (x+xCoef), ad(2) * (x+xCoef))), Array(ab(0) * (y+yCoef), ab(1) * (y+yCoef), ab(2) * (y+yCoef)))
-                b3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef), ad(1) * (x+xCoef), ad(2) * (x+xCoef))), Array(ab(0) * (y+yCoef + 1), ab(1) * (y+yCoef + 1), ab(2) * (y+yCoef + 1)))
-                c3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef + 1), ad(1) * (x+xCoef + 1), ad(2) * (x+xCoef + 1))), Array(ab(0) * (y+yCoef + 1), ab(1) * (y+yCoef + 1), ab(2) * (y+yCoef + 1)))
-                d3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef + 1), ad(1) * (x+xCoef + 1), ad(2) * (x+xCoef + 1))), Array(ab(0) * (y+yCoef), ab(1) * (y+yCoef), ab(2) * (y+yCoef)))
+                    
+                    ' Calculates the corners of the current Pixel based on the vectors and current Pixel position
+                    a3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef), ad(1) * (x+xCoef), ad(2) * (x+xCoef))), Array(ab(0) * (y+yCoef), ab(1) * (y+yCoef), ab(2) * (y+yCoef)))
+                    b3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef), ad(1) * (x+xCoef), ad(2) * (x+xCoef))), Array(ab(0) * (y+yCoef + 1), ab(1) * (y+yCoef + 1), ab(2) * (y+yCoef + 1)))
+                    c3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef + 1), ad(1) * (x+xCoef + 1), ad(2) * (x+xCoef + 1))), Array(ab(0) * (y+yCoef + 1), ab(1) * (y+yCoef + 1), ab(2) * (y+yCoef + 1)))
+                    d3 = SumTuple(SumTuple(s.A, Array(ad(0) * (x+xCoef + 1), ad(1) * (x+xCoef + 1), ad(2) * (x+xCoef + 1))), Array(ab(0) * (y+yCoef), ab(1) * (y+yCoef), ab(2) * (y+yCoef)))
 
-                ' Picks a pixel from the correct texture based on the orientation of the Side
-                If s.orientation = "bottom" Then
-                    col = textureColor(y + 1)(x + 1 + 8)
-                    trans = sideOpacity(y + 1)(x + 1 + 8)
-                ElseIf s.orientation = "top" Then
-                    col = textureColor(y + 1 + 8 + 8)(x + 1 + 8)
-                    trans = sideOpacity(y + 1 + 8 + 8)(x + 1 + 8)
-                ElseIf s.orientation = "left" Then
+                    ' Picks a pixel from the correct texture based on the orientation of the Side
+                    If s.orientation = "bottom" Then
+                        col = textureColor(y + 1)(x + 1 + 8)
+                        trans = sideOpacity(y + 1)(x + 1 + 8)
+                    ElseIf s.orientation = "top" Then
+                        col = textureColor(y + 1 + 8 + 8)(x + 1 + 8)
+                        trans = sideOpacity(y + 1 + 8 + 8)(x + 1 + 8)
+                    ElseIf s.orientation = "left" Then
+                        If CompareAngles(a3, d3) = True Then
+                            col = textureColor(y + 1 + 8)(x + 1)
+                            trans = sideOpacity(y + 1 + 8)(x + 1)
+                        Else
+                            col = textureColor(y + 1 + 8)(8 - x)
+                            trans = sideOpacity(y + 1 + 8)(8 - x)
+                        End If
+                    ElseIf s.orientation = "front" Then
+                        If CompareAngles(a3, d3) = True Then
+                            col = textureColor(y + 1 + 8)(x + 1 + 8)
+                            trans = sideOpacity(y + 1 + 8)(x + 1 + 8)
+                        Else
+                            col = textureColor(y + 1 + 8)(8 - x + 8)
+                            trans = sideOpacity(y + 1 + 8)(8 - x + 8)
+                        End If
+                    ElseIf s.orientation = "right" Then
                     If CompareAngles(a3, d3) = True Then
-                        col = textureColor(y + 1 + 8)(x + 1)
-                        trans = sideOpacity(y + 1 + 8)(x + 1)
-                    Else
-                        col = textureColor(y + 1 + 8)(8 - x)
-                        trans = sideOpacity(y + 1 + 8)(8 - x)
+                            col = textureColor(y + 1 + 8)(x + 1 + 8 + 8)
+                            trans = sideOpacity(y + 1 + 8)(x + 1 + 8 + 8)
+                        Else
+                            col = textureColor(y + 1 + 8)(8 - x + 8 + 8)
+                            trans = sideOpacity(y + 1 + 8)(8 - x + 8 + 8)
+                        End If
+                    ElseIf s.orientation = "back" Then
+                        If CompareAngles(a3, d3) = True Then
+                            col = textureColor(y + 1 + 8)(x + 1 + 8 + 8 + 8)
+                            trans = sideOpacity(y + 1 + 8)(x + 1 + 8 + 8 + 8)
+                        Else
+                            col = textureColor(y + 1 + 8)(8 - x + 8 + 8 + 8)
+                            trans = sideOpacity(y + 1 + 8)(8 - x + 8 + 8 + 8)
+                        End If
                     End If
-                ElseIf s.orientation = "front" Then
-                    If CompareAngles(a3, d3) = True Then
-                        col = textureColor(y + 1 + 8)(x + 1 + 8)
-                        trans = sideOpacity(y + 1 + 8)(x + 1 + 8)
-                    Else
-                        col = textureColor(y + 1 + 8)(8 - x + 8)
-                        trans = sideOpacity(y + 1 + 8)(8 - x + 8)
-                    End If
-                ElseIf s.orientation = "right" Then
-                   If CompareAngles(a3, d3) = True Then
-                        col = textureColor(y + 1 + 8)(x + 1 + 8 + 8)
-                        trans = sideOpacity(y + 1 + 8)(x + 1 + 8 + 8)
-                    Else
-                        col = textureColor(y + 1 + 8)(8 - x + 8 + 8)
-                        trans = sideOpacity(y + 1 + 8)(8 - x + 8 + 8)
-                    End If
-                ElseIf s.orientation = "back" Then
-                    If CompareAngles(a3, d3) = True Then
-                        col = textureColor(y + 1 + 8)(x + 1 + 8 + 8 + 8)
-                        trans = sideOpacity(y + 1 + 8)(x + 1 + 8 + 8 + 8)
-                    Else
-                        col = textureColor(y + 1 + 8)(8 - x + 8 + 8 + 8)
-                        trans = sideOpacity(y + 1 + 8)(8 - x + 8 + 8 + 8)
-                    End If
-                End If
-                
-                ' Checks if the Pixel is inside the field of view and not behind the player
-                If trans > 0  Then
-                    If IsPointInsideFOV(a3) = True Or IsPointInsideFOV(b3) = True Or IsPointInsideFOV(c3) = True Or IsPointInsideFOV(d3) = True Then
-                        Stats.VisiblePixels = Stats.VisiblePixels + 1
+                    
+                    ' Checks if the Pixel is inside the field of view and not behind the player
+                    If trans > 0  Then
+                        If IsPointInsideFOV(a3) = True Or IsPointInsideFOV(b3) = True Or IsPointInsideFOV(c3) = True Or IsPointInsideFOV(d3) = True Then
+                            Stats.VisiblePixels = Stats.VisiblePixels + 1
 
-                        Set newPixel = New Pixel
-                        newPixel.Initialize a3, b3, c3, d3, col, trans
+                            Set newPixel = New Pixel
+                            newPixel.Initialize a3, b3, c3, d3, col, trans
 
-                        allSquares.Add newPixel
+                            allSquares.Add newPixel
+                        End If
                     End If
-                End If
-            Next y
-        Next x
+                Next y
+            Next x
+        End If
     Next sIndex
     Call InsertCurrentTime("Data!E15") ' (stats) time log
-
     Set ApplyTexture = allSquares
 End Function
 

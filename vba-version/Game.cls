@@ -17,6 +17,7 @@ Private moveBy_ As Long
 Private rotateBy_ As Long
 Private instantDrawing_ As Boolean
 Private valuesSet_ As Boolean
+Private containsGlass_ As Boolean
 
 ' [get; set properties for variables]
 Public Property Get screenWidth() As Long
@@ -81,4 +82,12 @@ End Property
 
 Public Property Let valuesSet(value As Boolean)
     valuesSet_ = value
+End Property
+
+Public Property Get containsGlass() As Boolean
+    containsGlass = containsGlass_
+End Property
+
+Public Property Let containsGlass(value As Boolean)
+    containsGlass_ = value
 End Property
