@@ -240,13 +240,13 @@ Function CalculateSides(allSquares2 As Collection) As Collection
         Set currentBlockSides = SortByDistance(currentBlockSidesPre)
         Set currentBlockSides = ReverseCollection(currentBlockSides)
         
-        ' Optimizing the number of Sides to be drawn if the player is near the block
+        ' Optimizing the number of Sides to be drawn if the player is near the block, because only 3 sides can be visible at once
         If B.distance <= G.blockSize * Sqr(3) Then
             For i = 1 To 6
                 allSidesPre.Add currentBlockSides(i)
             Next i
         Else
-            For i = 1 To 6 ' 3 original
+            For i = 1 To 3
                 allSidesPre.Add currentBlockSides(i)
             Next i
         End If
