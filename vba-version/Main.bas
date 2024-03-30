@@ -250,10 +250,10 @@ Function CalculateSides(allSquares2 As Collection) As Collection
                 allSidesPre.Add currentBlockSides(i)
             Next i
         Else
-            For i = 1 To 3 ' 3 original
+            For i = 1 To 3
                 allSidesPre.Add currentBlockSides(i)
             Next i
-            For i = 4 To 6 ' 3 original
+            For i = 4 To 6
                 allSidesPre.Add currentBlockSides(i)
                 currentBlockSides(i).notVisible = True
             Next i
