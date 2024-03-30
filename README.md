@@ -166,7 +166,16 @@ Customize cube textures and their center positions:
 - *Default Texture:* NONE (not included)
 - *Available Textures:* Choose from 16 predefined textures.
 - *Coordinates:* Ensure unique coordinates as multiples of the cube's side length (Blocksize) to prevent overlap.
-- **NEW** *Half-block (slab):* Choose block type (block / slab)
+- *Half-block (slab):* Choose block type (block / slab)
+
+### *NEW* Transparent Textures (glass)
+
+In Textures sheet insert float number into the cell of the block texture. 0 = transparent, 1 = fully visible, 0,5 half visible
+Be sure to not change the data format of the cell. Keep it on "Text"
+Use *comma*, not period of the floats
+Keep blank to set it to 1 (default)
+
+
 ### Texture List
 
 Explore the available cube textures through this list.
