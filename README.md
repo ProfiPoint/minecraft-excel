@@ -170,7 +170,28 @@ Customize cube textures and their center positions:
 
 ### Building structures
 
-I made custom and easy program where you can build the objects with given block textures and then export it.
+I made custom and easy program where you can build the objects with given block textures and then export it. 
+The 3D enviroment for building is made in made in roblox, because of easy distribution and easy implementation features.
+
+#### How to build in the program
+
+1. Open the program by joining the experience or executing the file directly in Studio.
+2. Wait for all assets to load and you will be put into free camera mode.
+3. Equip building mode by pressing key "1" [1].
+4. Select texture type from the left of the screen [2].
+5. **Place a block by clicking** on other side of blocks or floor, hold **shift** while clicking to **remove** it.
+6. After you are done building click on the *Show Results* [3].
+7. A text box will appear. Copy the text of the box and paste it into the **Excel program**.
+8. Click *Clear Blocks* to clear all blocks
+9. Paste the text of the blocks into textbox on right top of the screen [5] and press *Load Blocks* [6] to load blocks into this block editor to continue your progress.
+10. To add custom textures in that building program, you need to modify the script of the file.
+
+![In Roblox Editor](screenshots/roblox_me.png) 
+
+![In Excel Program](screenshots/excel_me.png) 
+
+Link to the file is [Block Builder.rbxl](https://github.com/ProfiPoint/minecraft-excel/blob/main/rb-block-builder/BlockBuilder.rbxl)
+
 
 
 ### *NEW* Transparent Textures (glass)
