@@ -1,0 +1,172 @@
+.middle-line-edit{
+    color: white;
+    font-size: 3vh;
+    text-align: right;
+    margin-left: 0.5vh;
+    padding-bottom: 1vh;
+}
+
+#edit-header{
+    /*/end with the divs on the right side so that it sticks to the right side all items /*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vh 1vh;
+    padding-left: 5vh;
+    gap: 1vh
+}
+
+.text-input-edit{
+    /*/this is an input, remove outline, set the text to white, remove background, font size = 20*/
+    outline: none;
+    color: white;
+    background: none;
+    font-size: 2vh;
+    border: none;
+    border-bottom: 0.1vh solid gray;
+}
+
+.font-size-input{
+    width: 7vh;
+}
+
+.font-style-input{
+    width: 14vh;
+}
+
+.outline-size-input{
+    width: 5vh;
+}
+
+.pos-x-input{
+    width: 7vh;
+}   
+
+.pos-y-input{
+    width: 7vh;
+}
+
+.size-x-input{
+    width: 7vh;
+}
+
+.size-y-input{
+    width: 7vh;
+}
+
+#font-style-input{
+    width: 17vh;
+    height: auto;
+}
+
+.align-to-right{
+    position: absolute;
+    right: 0;
+}
+
+.text-input-edit::placeholder{
+    color: gray;
+    font-size: 2vh;
+}
+
+.add-new-text {
+    margin-bottom: 10px;
+}
+
+.input-box {
+    position: absolute;
+    border: 0.1vh solid transparent;
+    z-index: 101;
+}
+
+.selected-box-edit {
+    border: 0.2vh dashed #000;
+    padding: 0.5vh 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 101;
+}
+
+.resize-handle {
+    width: 1vh;
+    height: 1vh;
+    background: #000;
+    position: absolute;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.top-left { top: -1vh; left: -1vh; cursor: nw-resize; }
+.top-right { top: -1vh; right: -1vh; cursor: ne-resize; }
+.bottom-left { bottom: -1vh; left: -1vh; cursor: sw-resize; }
+.bottom-right { bottom: -1vh; right: -1vh; cursor: se-resize; }
+.middle-left { top: 50%; left: -1vh; cursor: w-resize;}
+.middle-right { top: 50%; right: -1vh; cursor: e-resize;  }
+.top-middle { top: -1vh; left: 50%; cursor: n-resize; }
+.bottom-middle { bottom: -1vh; left: 50%; cursor: s-resize;  }
+
+.apply-edit {
+    height: auto;
+    width: auto;
+    background-color: rgba(255, 255, 255, 0); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1vw;
+    cursor: pointer;
+    border-color: #dddddd;
+    border-style: solid;
+    border-radius: 0.5vw;
+    padding: 0.25vw 1vw;
+    margin-left: 2vw;
+}
+
+/*/<div class="color-picker-container">
+    <input type="color" id="color-picker-text" class="colorPicker">
+    <img id="text-color" src="./assets/edit/textColor.svg" alt="Color Icon" class="special svg-icon constant-size-images smaller-icons">
+</div>*/
+
+.input-box-element{
+    height: 100%;
+    width: 100%;
+    z-index: 101;
+    background-color: rgba(255, 255, 255, 0);
+    /*border: 0.25vw solid #3498db; /* Set your desired border color */
+    /*outline: none; /* Remove outline */
+    /*appearance: none; /* Remove default browser styling */
+    /*box-shadow: none; /* Remove any box shadow */
+    padding: 0vh 0vh;
+    padding-block: 0vh;
+    outline: none;
+    border: none;
+}
+
+.color-picker-container {
+    position: relative;
+    display: inline-block;
+    width: 2vh; /* Fixed width */
+    height: 2vh; /* Fixed height */
+    vertical-align: middle; /* Aligns it with the text */
+}
+
+
+.colorPicker {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    left: 0px;
+    top: 0px;
+}
+
+.font-style-input {
+    color: black;
+}
+
+#font-style-input {
+    color: white;
+    background-color: black; /* Background color of the select element */
+}

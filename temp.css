@@ -1,0 +1,27 @@
+.fullscreen-white{
+    background-color: white;
+    color: black;
+    width: 1800px;
+    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.fullscreen-black{
+    background-color: black;
+    color: black;
+    width: 5000%;
+    height: 5000%;
+    /*set the left top corner to -2500%*/
+    position: absolute;
+    top: -2500%;
+    left: -2500%;
+    z-index: 99;
+}
